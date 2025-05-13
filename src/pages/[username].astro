@@ -1,5 +1,6 @@
 ---
 import { clerkClient } from "@clerk/astro/server";
+import ChromeLayout from "../layouts/ChomeLayout.astro";
 
 const authResult = Astro.locals.auth();
 const backendClerkClient = clerkClient(Astro);
@@ -88,9 +89,8 @@ try {
 	}
 	return new Response("Un error inesperado ocurrió al cargar el perfil.", { status: 500 });
 }
-
-import Header from "../components/Header";
 ---
 
-<Header client:load />
-<h1>Welcome {username}!</h1>
+<ChromeLayout title="La Bibliotecaria">
+	<h1>Welcome {username}!</h1>
+</ChromeLayout>
