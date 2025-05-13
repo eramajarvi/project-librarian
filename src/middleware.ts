@@ -1,11 +1,21 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/astro/server";
 
-const isProtectedRoute = createRouteMatcher(["/:username"]);
+// Rutas que deberían ser accesibles para usuarios no autenticados
+const isPublicRoute = createRouteMatcher(["/"]);
 
-export const onRequest = clerkMiddleware((auth, context) => {
-	const { userId, redirectToSignIn } = auth();
+// Rutas que requieren autenticación.
+// La ruta `/[username]` está implícitamente protegida porque si no es pública,
+// y el usuario no está autenticado, será redirigido
+const isProtectedRoute = createRouteMatcher(["/[:username](.*)"]);
 
-	if (isProtectedRoute(context.request) && !userId) {
-		return redirectToSignIn();
+export const onRequest = clerkMiddleware((auth, context, next) => {
+	if (isPublicRoute(context.request)) {
+		return next();
 	}
+
+	if (!auth().userId) {
+		return auth().redirectToSignIn({ returnBackUrl: context.url.toString() });
+	}
+
+	return next();
 });
