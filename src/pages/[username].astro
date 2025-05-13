@@ -1,6 +1,7 @@
 ---
 import { clerkClient } from "@clerk/astro/server";
 import ChromeLayout from "../layouts/ChomeLayout.astro";
+import Curve from "../components/curve.astro";
 
 const authResult = Astro.locals.auth();
 const backendClerkClient = clerkClient(Astro);
@@ -93,4 +94,5 @@ try {
 
 <ChromeLayout title="La Bibliotecaria">
 	<h1>Welcome {username}!</h1>
+	<Curve />
 </ChromeLayout>
