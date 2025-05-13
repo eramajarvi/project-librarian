@@ -1,0 +1,96 @@
+---
+import { clerkClient } from "@clerk/astro/server";
+
+const authResult = Astro.locals.auth();
+const backendClerkClient = clerkClient(Astro);
+
+if (!authResult.userId) {
+	return authResult.redirectToSignIn({ returnBackUrl: Astro.url.toString() });
+}
+
+const { username } = Astro.params;
+const urlIdentifier = username!;
+
+let pageOwnerData;
+let isOwner = false;
+let displayDataForUser = urlIdentifier;
+
+try {
+	const loggedInUser = await backendClerkClient.users.getUser(authResult.userId);
+
+	const loggedInUserCanonicalIdentifier =
+		loggedInUser.username || (loggedInUser.publicMetadata?.username as string) || loggedInUser.id;
+
+	if (loggedInUserCanonicalIdentifier === urlIdentifier) {
+		isOwner = true;
+		pageOwnerData = loggedInUser;
+		displayDataForUser = loggedInUserCanonicalIdentifier;
+	} else {
+		// un usuario que ha iniciado sesión intenta acceder a la página de otro usuario
+		try {
+			// ¿cual es su nombre de usuario?
+			const usersByUsername = await backendClerkClient.users.getUserList({ username: [urlIdentifier] });
+
+			if (usersByUsername.data.length > 0) {
+				pageOwnerData = usersByUsername.data[0];
+			} else {
+				try {
+					pageOwnerData = await backendClerkClient.users.getUser(urlIdentifier);
+				} catch (e: any) {
+					if (!(e.status === 404 && e.clerkError)) {
+						console.warn(
+							`Un error no 404 se ha producido al intentar acceder a la página de un usuario con nombre de usuario '${urlIdentifier}':`,
+							e.message
+						);
+					} else {
+						console.debug(`Usuario no encontrado con nombre de usuario: ${urlIdentifier}`);
+					}
+				}
+			}
+		} catch (fetchError: any) {
+			console.error(
+				`Ha ocurrido un error al intentar acceder a la página de un usuario con nombre de usuario '${urlIdentifier}':`,
+				fetchError
+			);
+
+			if (fetchError.clerkError && fetchError.errors && fetchError.errors.length > 0) {
+				const clerkErrorMessage = fetchError.errors[0].longMessage || fetchError.errors[0].message;
+				return new Response(`No se pudo cargar el perfil: ${clerkErrorMessage}`, { status: fetchError.status || 500 });
+			}
+			return new Response("No se pudo cargar el perfil.", { status: 500 });
+		}
+
+		if (!pageOwnerData) {
+			// El perfil especificado no existe.
+			// Redirigir al usuario a su propia página de usuario
+			if (loggedInUser && loggedInUserCanonicalIdentifier) {
+				if (Astro.url.pathname !== `/${loggedInUserCanonicalIdentifier}`) {
+					return Astro.redirect(`/${loggedInUserCanonicalIdentifier}`);
+				} else {
+					return Astro.redirect("/");
+				}
+			} else {
+				return Astro.redirect("/");
+			}
+		}
+
+		displayDataForUser =
+			pageOwnerData.username || (pageOwnerData.publicMetadata?.username as string) || pageOwnerData.id;
+	}
+} catch (error: any) {
+	console.error(
+		`Error al procesar el nombre de usuario. Identifiacdor de URL: ${urlIdentifier}, ID del usuario que ha iniciado sesión: ${authResult.userId}. Error:`,
+		error
+	);
+	if (error.clerkError && error.errors && error.errors.length > 0) {
+		const clerkErrorMessage = error.errors[0].longMessage || error.errors[0].message;
+		return new Response(`Un error ocurrió: ${clerkErrorMessage}`, { status: error.status || 500 });
+	}
+	return new Response("Un error inesperado ocurrió al cargar el perfil.", { status: 500 });
+}
+
+import Header from "../components/Header";
+---
+
+<Header client:load />
+<h1>Welcome {username}!</h1>
