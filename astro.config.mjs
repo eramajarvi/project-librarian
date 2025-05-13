@@ -7,6 +7,8 @@ import react from "@astrojs/react";
 
 export default defineConfig({
 	integrations: [clerk(), react()],
-	adapter: node({ mode: "standalone" }),
+	adapter: node({
+		mode: "standalone",
+	}),
 	output: "server",
 });
