@@ -1,4 +1,12 @@
 ---
+import { ClerkProvider } from "@clerk/clerk-react";
+
+const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!publishableKey) {
+	throw new Error("Add your Clerk Publishable Key to the .env file");
+}
+
 interface Props {
 	title: string;
 }
@@ -7,15 +15,21 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>La Bibliotecaria</title>
-	</head>
+<ClerkProvider
+	publishableKey={publishableKey}
+	signUpFallbackRedirectUrl="/username"
+	signInFallbackRedirectUrl="/username"
+	client:load>
+	<html lang="es">
+		<head>
+			<meta charset="UTF-8" />
+			<meta name="viewport" content="width=device-width" />
+			<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+			<title>La Bibliotecaria</title>
+		</head>
 
-	<body>
-		<slot />
-	</body>
-</html>
+		<body>
+			<slot />
+		</body>
+	</html>
+</ClerkProvider>
