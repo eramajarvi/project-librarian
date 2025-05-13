@@ -1,0 +1,7 @@
+@layer system, components, utilities;
+
+@import "./fonts.css" layer(system);
+
+@view-transition {
+	navigation: auto;
+}
