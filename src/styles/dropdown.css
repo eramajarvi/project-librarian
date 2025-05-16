@@ -10,50 +10,82 @@ select::picker-icon {
 }
 
 /* --- */
-
 /* Styling the options list */
-
 ::picker(select) {
 	border-radius: 0.5rem;
 	padding: 0;
-	box-shadow: 0px 12.8px 28.8px rgba(0, 0, 0, 0.13), 0px 0px 9.2px rgba(0, 0, 0, 0.11);
-	border: 1px solid #ececec;
+	margin-top: 4px;
+	box-shadow: 0px 12.8px 28.8px rgba(54, 52, 52, 0.6), 0px 0px 9.2px rgba(0, 0, 0, 0.11);
+	border: 5px solid rgba(0, 128, 255, 0.6);
 }
 
 option {
-	grid-template-columns: 1.5rem 1fr auto;
-	padding: 0.5rem 1rem;
-	/*  remove when patch is in  */
-	place-items: start;
+	grid-template-columns: 1rem 1fr;
+	padding: 0px 1rem;
+	background-color: rgb(42, 42, 42);
 
 	&:nth-child(even):not(:hover) {
-		background: #ececec;
+		background: rgb(32, 32, 32);
 	}
 
 	&:hover {
-		background: #cbe7ff;
-	}
-
-	.symbol {
-		margin-left: 1rem;
-	}
-
-	.currency-long {
-		font-size: 80%;
-		color: #595959;
-	}
-
-	.symbol {
-		justify-self: end;
+		background: rgb(32, 123, 232);
+		outline: 3px solid rgba(0, 128, 255, 0.6);
+		outline-offset: 0px;
 	}
 }
 
-.bookmarks-dropdown {
-	&,
-	&::picker(select) {
-		appearance: base-select;
-	}
+/* Styles for both the options and selectedcontent */
+option,
+selectedcontent {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.8rem;
+	font-size: 1rem;
+	align-items: center;
+	justify-content: start;
+	color: white;
+}
 
+/* Style what you see before you open the select dropdown */
+selectedcontent {
+	height: 1.2rem;
+	width: 12rem;
+	grid-template-columns: 1.5rem auto;
+	width: auto;
+}
+
+select {
+	border: 2px solid rgba(0, 128, 255, 0.8);
+	border-radius: 9999px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 5fr;
+	padding: 0.7em 1em 0.7em 1em;
+	width: auto;
+	align-items: center;
+	background: linear-gradient(var(--start-color, #6fb4f7), var(--end-color, #1a82fb));
+}
+
+.arrow-container {
+	display: flex;
+}
+
+.arrow {
+	align-self: end;
+	transition: rotate 0.25s;
+	background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 12" fill="none" stroke="%23fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M2,4 l3,-3 3,3"/%3E%3Cpath d="M2,8 l3,3 3,-3"/%3E%3C/svg%3E')
+		no-repeat center 1em;
+	background-size: 0.8em, 100%;
+	background-position: right;
+	width: 1rem;
+	height: 1rem;
+
+	.bookmarks-dropdown:open & {
+		rotate: x 180deg;
+	}
+}
+
+.old-bookmarks-dropdown {
 	padding: 0.7em 3em 0.7em 1em;
 	border: 0;
 	border-radius: 9999px;
@@ -65,10 +97,9 @@ option {
 	color: white;
 }
 
-.bookmarks-dropdown option {
+/* .bookmarks-dropdown option {
 	background-color: #1a1b22;
 	color: white;
-	/* font-size: large; */
 }
 
 .bookmarks-dropdown:active {
@@ -80,4 +111,4 @@ option {
 .bookmarks-dropdown:focus {
 	--ring: 0.2em;
 	outline: 0;
-}
+} */
