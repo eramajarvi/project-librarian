@@ -1,3 +1,154 @@
 .black-gradient {
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 }
+
+.basegrid {
+	/* --- Customizable Curve Properties --- */
+	/* Adjust these values to change the intensity and shape of the curve */
+
+	/* Perspective intensity. Smaller values = more extreme 3D effect. */
+	--perspective-value: 2000px;
+	/* Overall tilt of the grid on the X-axis (tilts top/bottom) */
+	--container-rotate-x: 5deg;
+
+	/* Y-axis rotation for columns (side-to-side curve) */
+	--col-angle-far: 18deg; /* For columns 1 & 4 (outer) */
+	--col-angle-near: 15deg; /* For columns 2 & 3 (inner) */
+
+	/* X-axis rotation for rows (top/bottom curve for individual items) */
+	--row-angle-edge: -5deg; /* For rows 1 & 3 (top/bottom) */
+
+	/* Z-translation to create depth. Negative values push items away from the viewer. */
+	/* Base Z-distance for columns */
+	--z-col-far: -150px; /* Columns 1 & 4 pushed further back */
+	--z-col-near: -200px; /* Columns 2 & 3 are closer */
+
+	/* Additional Z-offset for rows to enhance vertical curve */
+	--z-row-edge-offset: -20px; /* Rows 1 & 3 pushed even further back */
+}
+
+.carousel-bottom {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr); /* 4 columns */
+	grid-template-rows: repeat(3, 1fr); /* 3 rows */
+	gap: 0px; /* Space between items */
+
+	width: 100%; /* Adjust as needed */
+	max-width: 90%; /* Maximum width of the grid */
+	margin: 5px auto; /* Centering the grid */
+
+	/* --- Setup 3D Rendering Context --- */
+	perspective: var(--perspective-value);
+	/* Tilts the entire grid back slightly, enhancing the 3D view */
+	transform: rotateX(var(--container-rotate-x));
+	/* Ensures children are transformed in 3D space, not flattened */
+	transform-style: preserve-3d;
+	perspective-origin: center -25%;
+	/* You can also adjust perspective-origin here if needed, e.g., perspective-origin: center 25%; */
+}
+
+.carousel-bottom > div {
+	background-color: aqua; /* Your original background color */
+	width: 100%; /* Items will take full width of their grid cell */
+	height: 230px; /* Your original height */
+	padding: 0; /* Your original padding */
+	margin: 5px;
+
+	display: flex; /* For centering the text content */
+	align-items: center;
+	justify-content: center;
+	color: #1a1a1a; /* Dark text for contrast on aqua */
+	font-size: 2.5em;
+	font-weight: bold;
+	border: 1px solid #00adb5; /* Border matching aqua theme */
+	border-radius: 4px; /* Slightly rounded corners */
+	transition: all 0.3s ease-out; /* Smooth transitions for hover */
+	/* transform-origin: center center; /* Default, usually what's needed */
+}
+
+/* --- Define Row-Specific Transform Variables --- */
+/* These variables will be used by column rules to apply combined transforms. */
+
+/* Row 1 (Top Row) */
+.carousel-bottom .div1,
+.carousel-bottom .div2,
+.carousel-bottom .div3,
+.carousel-bottom .div4 {
+	--item-rotate-x: 0deg;
+	/* --item-z-row-offset: var(--z-row-edge-offset); */
+	--item-z-row-offset: 0px;
+}
+
+/* Row 2 (Middle Row) */
+.carousel-bottom .div5,
+.carousel-bottom .div6,
+.carousel-bottom .div7,
+.carousel-bottom .div8 {
+	--item-rotate-x: 0deg; /* Middle row items are not tilted on X-axis */
+	--item-z-row-offset: 10px; /* Middle row is the baseline for Z depth */
+}
+
+/* Row 3 (Bottom Row) */
+.carousel-bottom .div9,
+.carousel-bottom .div10,
+.carousel-bottom .div11,
+.carousel-bottom .div12 {
+	/* --item-rotate-x: calc(-1 * var(--row-angle-edge)); */
+	--item-rotate-x: 0deg;
+	/* --item-z-row-offset: var(--z-row-edge-offset); */
+	--item-z-row-offset: 0px;
+}
+
+/* --- Apply Column-Specific Transforms (incorporating row variables) --- */
+/* Each item gets a combination of Y-rotation (for horizontal curve), 
+   X-rotation (for vertical curve), and Z-translation (for depth). */
+
+/* Column 1 (Leftmost) */
+.carousel-bottom .div1,
+.carousel-bottom .div5,
+.carousel-bottom .div9 {
+	margin-left: 30px;
+	transform: rotateY(var(--col-angle-far)) rotateX(var(--item-rotate-x))
+		translateZ(calc(var(--z-col-far) + var(--item-z-row-offset)));
+}
+
+/* Column 2 (Inner Left) */
+.carousel-bottom .div2,
+.carousel-bottom .div6,
+.carousel-bottom .div10 {
+	margin-left: 25px;
+	transform: rotateY(calc(0.6 * var(--col-angle-near))) rotateX(calc(1 * var(--item-rotate-x)))
+		translateZ(calc(1.2 * var(--z-col-near) + 0.1 * var(--item-z-row-offset)));
+}
+
+/* Column 3 (Inner Right) */
+.carousel-bottom .div3,
+.carousel-bottom .div7,
+.carousel-bottom .div11 {
+	margin-left: -35px;
+	transform: rotateY(calc(-0.5 * var(--col-angle-near))) rotateX(calc(1.5 * var(--item-rotate-x)))
+		translateZ(calc(1.2 * var(--z-col-near) + var(--item-z-row-offset)));
+}
+
+/* Column 4 (Rightmost) */
+.carousel-bottom .div4,
+.carousel-bottom .div8,
+.carousel-bottom .div12 {
+	margin-left: -50px;
+	transform: rotateY(calc(-1 * var(--col-angle-far))) rotateX(var(--item-rotate-x))
+		translateZ(calc(var(--z-col-far) + var(--item-z-row-offset)));
+}
+
+/* .carousel-bottom {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			grid-template-rows: repeat(3, 1fr);
+			gap: 8px;
+
+			& > div {
+				background-color: aqua;
+				width: 100%;
+				height: 200px;
+				padding: 0;
+			}
+		} */
