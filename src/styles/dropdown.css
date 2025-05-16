@@ -1,10 +1,51 @@
-.topsites-container {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	margin-top: 1rem;
+/* Enter into custom mode */
+select,
+::picker(select) {
+	appearance: base-select;
+}
+
+option::checkmark,
+select::picker-icon {
+	display: none;
+}
+
+/* --- */
+
+/* Styling the options list */
+
+::picker(select) {
+	border-radius: 0.5rem;
+	padding: 0;
+	box-shadow: 0px 12.8px 28.8px rgba(0, 0, 0, 0.13), 0px 0px 9.2px rgba(0, 0, 0, 0.11);
+	border: 1px solid #ececec;
+}
+
+option {
+	grid-template-columns: 1.5rem 1fr auto;
+	padding: 0.5rem 1rem;
+	/*  remove when patch is in  */
+	place-items: start;
+
+	&:nth-child(even):not(:hover) {
+		background: #ececec;
+	}
+
+	&:hover {
+		background: #cbe7ff;
+	}
+
+	.symbol {
+		margin-left: 1rem;
+	}
+
+	.currency-long {
+		font-size: 80%;
+		color: #595959;
+	}
+
+	.symbol {
+		justify-self: end;
+	}
 }
 
 .bookmarks-dropdown {
