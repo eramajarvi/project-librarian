@@ -13,6 +13,7 @@
     "@astrojs/react": "^4.2.7",
     "@clerk/astro": "^2.7.2",
     "@clerk/clerk-react": "^5.31.2",
+    "@clerk/themes": "^2.2.45",
     "@nanostores/react": "^1.0.0",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.4",
