@@ -9,7 +9,7 @@ interface TopSitesViewProps {
 
 export default function TopSitesView({ username, isOwner }: any) {
 	return (
-		<div>
+		<div className="topsites-container">
 			<BookmarksFolders />
 			<Curve />
 		</div>
