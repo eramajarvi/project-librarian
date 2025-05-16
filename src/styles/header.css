@@ -9,7 +9,9 @@
 	z-index: 5;
 	background: linear-gradient(to bottom, #3a3c4d 0%, #2c2e3c 50%, #252634 51%, #38394a 100%);
 	color: white;
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	border: 0.1em solid rgba(255, 255, 255, 0.2);
+	outline: 0.1em solid rgba(255, 255, 255, 0.2);
+	outline-offset: 1px;
 	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
 	border-radius: 9999px;
 }
