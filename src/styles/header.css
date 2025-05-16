@@ -21,6 +21,19 @@
 	width: 100%;
 }
 
+.title-container {
+	display: flex;
+	align-items: center;
+
+	img {
+		margin-right: 8px;
+	}
+}
+
+.clerk-user-container {
+	width: auto;
+}
+
 .icon-button-container {
 	display: flex;
 	width: 32px;
@@ -30,12 +43,16 @@
 	border-radius: 6px;
 	align-items: center;
 	justify-content: center;
-	transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease, outline-color 0.2s ease, box-shadow 0.2s ease;
+	outline: 3px solid transparent;
+	outline-offset: 4px;
+	position: relative;
 }
 
 .icon-button-container:hover {
-	outline: 3px solid rgb(163, 170, 177);
-	outline-offset: 4px;
+	outline: 3px solid rgba(0, 128, 255, 0.6);
+	outline-offset: 0px;
+	box-shadow: 0 0 6px 0px rgba(0, 128, 255, 0.6);
 }
 
 .icon-button-container:active {
@@ -44,27 +61,35 @@
 }
 
 .icon-button {
-	width: 24px;
-	height: 24px;
-	border: none;
+	width: 32px;
+	height: 32px;
+	border: 2px solid transparent;
 	cursor: pointer;
-}
-
-.glasses-button {
-	background: url("../assets/toolbar/ReadingList-Glasses.png") no-repeat center center;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: center;
 	background-size: contain;
+	border-radius: 4px;
+	transition: background-color 0.2s ease, box-shadow 0.2s ease, outline-offset 0.2s ease;
 }
 
-.glasses-button:hover {
-	background-blend-mode: color;
+.icon-button.active {
+	background: linear-gradient(to bottom, #7c7d82 0%, #6c6e75 100%);
+	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
-.bookmarks-button {
-	background: url("../assets/toolbar/ToolbarBookmarksTemplate.png") no-repeat center center;
-	background-size: contain;
-}
-
+.glasses-button,
+.bookmarks-button,
 .topsites-button {
-	background: url("../assets/toolbar/ToolbarTopSitesTemplate.png") no-repeat center center;
-	background-size: contain;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.glasses-button img,
+.bookmarks-button img,
+.topsites-button img {
+	width: 22px;
+	height: 22px;
+	display: block;
 }
