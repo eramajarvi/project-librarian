@@ -7,17 +7,25 @@ import react from "@astrojs/react";
 
 import { dark } from "@clerk/themes";
 
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineConfig({
-	integrations: [
-		clerk({
-			appearance: {
-				baseTheme: dark,
-			},
-		}),
-		react(),
+  integrations: [
+      clerk({
+          appearance: {
+              baseTheme: dark,
+          },
+      }),
+      react(),
 	],
-	adapter: node({
-		mode: "standalone",
+
+  adapter: node({
+      mode: "standalone",
 	}),
-	output: "server",
+
+  output: "server",
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
