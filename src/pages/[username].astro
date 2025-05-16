@@ -2,6 +2,7 @@
 import { clerkClient } from "@clerk/astro/server";
 import ChromeLayout from "../layouts/ChomeLayout.astro";
 import Curve from "../components/curve.astro";
+import ViewManager from "../components/ViewManager.tsx"; // Import the ViewManager
 
 const authResult = Astro.locals.auth();
 const backendClerkClient = clerkClient(Astro);
@@ -90,9 +91,17 @@ try {
 	}
 	return new Response("Un error inesperado ocurrió al cargar el perfil.", { status: 500 });
 }
+
+// Prepare props for ViewManager. Only pass necessary and serializable data.
+// Avoid passing the entire `pageOwnerData` object if it's very large and not all needed.
+const viewManagerProps = {
+	username: displayDataForUser,
+	isOwner: isOwner,
+	// Example: If you need pageOwner's ID in client components:
+	// pageOwnerId: pageOwnerData?.id
+};
 ---
 
-<ChromeLayout title="La Bibliotecaria">
-	<h1>Welcome {username}!</h1>
-	<Curve />
+<ChromeLayout title={`La Bibliotecaria - ${displayDataForUser}`}>
+	<ViewManager client:load {...viewManagerProps} />
 </ChromeLayout>
