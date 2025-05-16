@@ -1,8 +1,18 @@
+.topsites-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	margin-top: 1rem;
+}
+
 .bookmarks-dropdown {
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	position: relative;
+	&,
+	&::picker(select) {
+		appearance: base-select;
+	}
+
 	padding: 0.7em 3em 0.7em 1em;
 	border: 0;
 	border-radius: 9999px;
@@ -15,8 +25,9 @@
 }
 
 .bookmarks-dropdown option {
-	background-color: #1a1b22; /* dark background */
-	color: white; /* white text */
+	background-color: #1a1b22;
+	color: white;
+	/* font-size: large; */
 }
 
 .bookmarks-dropdown:active {
