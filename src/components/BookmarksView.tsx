@@ -1,4 +1,5 @@
 import "../styles/index.css";
+import TestTurso from "./test-turso";
 
 interface BookmarksViewProps {
 	username: string;
@@ -10,6 +11,7 @@ export default function BookmarksView({ username, isOwner }: any) {
 		<div>
 			<h2>{isOwner ? "Your" : `${username}'s`} Bookmarks</h2>
 			<p>Bookmarks items will go here...</p>
+			<TestTurso />
 		</div>
 	);
 }
