@@ -14,5 +14,19 @@
 	html {
 		font-family: "Lucida Sans Unicode", "Lucida Grande", "Segoe UI", "Helvetica Neue", sans-serif;
 		color: white;
+
+		width: 100%;
+
+		font-size: 16px;
+		line-height: 1.7;
+		font-weight: 300 400;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	body {
+		margin: 2rem;
+		padding: 0;
+		background: linear-gradient(to bottom, #020202, #2c2e3c);
 	}
 }
