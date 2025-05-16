@@ -1,4 +1,5 @@
 import "../styles/index.css";
+import BookmarksFolders from "./BookmarksFolders";
 import Curve from "./TopSites-Curve";
 
 interface TopSitesViewProps {
@@ -9,7 +10,7 @@ interface TopSitesViewProps {
 export default function TopSitesView({ username, isOwner }: any) {
 	return (
 		<div>
-			<p>Top sites items will go here...</p>
+			<BookmarksFolders />
 			<Curve />
 		</div>
 	);
