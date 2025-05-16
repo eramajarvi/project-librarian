@@ -2,6 +2,14 @@
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 }
 
+.curve-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100vh; /* Full viewport height */
+}
+
 .basegrid {
 	/* --- Customizable Curve Properties --- */
 	/* Adjust these values to change the intensity and shape of the curve */
