@@ -5,7 +5,9 @@
 @import "./fonts.css" layer(system);
 @import "./header.css" layer(components);
 @import "./curved.css" layer(components);
-@import "./components.css" layer(components);
+@import "./dropdown.css" layer(components);
+@import "./utilities.css" layer(utilities);
+
 @import "tw-animate-css";
 
 @view-transition {
