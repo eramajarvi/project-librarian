@@ -4,7 +4,6 @@ import { activeView } from "../stores/activeViewStore";
 import ReadingListView from "./ReadingListView";
 import BookmarksView from "./BookmarksView";
 import TopSitesView from "./TopSitesView";
-import DefaultView from "./TopSitesView";
 
 interface ViewManagerProps {
 	username: string;
@@ -26,6 +25,7 @@ export default function ViewManager({ username, isOwner }: ViewManagerProps) {
 				return <TopSitesView {...commonProps} />;
 			case "default":
 			default:
+				// Default to TopSitesView if no specific view is set
 				return <TopSitesView username={username} />;
 		}
 	};
