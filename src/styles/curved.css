@@ -41,8 +41,8 @@
 	display: flex;
 	width: 100%;
 	max-width: 100vw;
-	margin-top: -5%;
-	overflow: hidden;
+	margin-top: -60px;
+	/* overflow: hidden; */
 	min-height: 200px;
 	justify-content: center;
 	align-items: center;
@@ -99,22 +99,30 @@
 	width: 105%; /* Items will take full width of their grid cell */
 	height: 105%; /* Your original height */
 	min-width: 120px;
-	min-height: 150px;
+	/* min-height: 100px; */
 	/* aspect-ratio: 16/9; */
 	padding: 0; /* Your original padding */
 	/* margin: 1px; */
 
-	display: flex; /* For centering the text content */
+	display: inline-block;
 	align-items: center;
 	justify-content: center;
 	color: #1a1a1a; /* Dark text for contrast on aqua */
 	font-size: 2.5em;
 	font-weight: bold;
-	border: 1px solid #00adb5; /* Border matching aqua theme */
+	border: 1px solid #000000; /* Border matching aqua theme */
 	border-radius: 4px; /* Slightly rounded corners */
 	transition: all 0.3s ease-out; /* Smooth transitions for hover */
 	/* transform-origin: center center; /* Default, usually what's needed */
 }
+
+.carousel-bottom > div:hover {
+	/* transform: scale(1.05); */
+	box-shadow: 0 0 0 10px #1a82fb;
+	/* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+	/* background-color: #e0f7fa; */
+}
+/* Optional: Add a transition effect for the hover state */
 
 /* --- Define Row-Specific Transform Variables --- */
 /* These variables will be used by column rules to apply combined transforms. */
@@ -154,7 +162,7 @@
 
 	display: inline-block;
 
-	div {
+	div & {
 		display: block;
 		-webkit-box-reflect: below 0px
 			linear-gradient(to bottom, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.25) 100%);

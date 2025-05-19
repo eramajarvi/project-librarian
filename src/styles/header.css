@@ -5,7 +5,10 @@
 	height: 18px;
 	padding: 1rem;
 	position: sticky;
-	top: 10px;
+	max-width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	top: 0.5rem;
 	z-index: 1000;
 	background: linear-gradient(to bottom, #3a3c4d 0%, #2c2e3c 50%, #252634 51%, #38394a 100%);
 	color: white;
@@ -14,6 +17,12 @@
 	outline-offset: 1px;
 	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
 	border-radius: 9999px;
+}
+
+.header-container {
+	display: flexbox;
+	align-items: center;
+	justify-content: center;
 }
 
 .toolbar {

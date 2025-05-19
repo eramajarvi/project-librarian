@@ -29,7 +29,7 @@
 	}
 
 	body {
-		margin: 2rem;
+		margin: 0.5rem 2rem;
 		padding: 0;
 		background: linear-gradient(to bottom, #020202, #2c2e3c);
 	}
