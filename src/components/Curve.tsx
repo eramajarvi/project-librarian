@@ -44,6 +44,8 @@ function Curve({ selectedFolderId }: CurveProps) {
 		fetchBookmarksForFolder();
 	}, [selectedFolderId]);
 
+	const divPlaceholders = Array.from({ length: 12 });
+
 	if (error) {
 		return (
 			<div className="curve-container">
@@ -66,13 +68,15 @@ function Curve({ selectedFolderId }: CurveProps) {
 		return (
 			<div className="curve-container">
 				<div className="carousel-bottom basegrid">
-					<div>No hay marcadores en esta carpeta.</div>
+					{divPlaceholders.map((_, index) => (
+						<div key={`div-${index + 1}`} className={`div${index + 1}`}>
+							<EmptyBookmarkPlaceholder />
+						</div>
+					))}
 				</div>
 			</div>
 		);
 	}
-
-	const divPlaceholders = Array.from({ length: 12 });
 
 	return (
 		<div className="curve-container">
