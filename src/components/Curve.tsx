@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { db, type Bookmark } from "../lib/dexie";
 
 import EmptyBookmarkPlaceholder from "./EmptyBookmarkPlaceholder";
+import LoadingBookmarkPlaceholder from "./LoadingBookmarkPlaceholder";
+import BookmarkPlaceholder from "./BookmarkPlaceholder";
+import SingleScreenshot from "./SingleScreenshot";
 
 interface CurveProps {
 	selectedFolderId: string | null;
@@ -54,9 +57,7 @@ function Curve({ selectedFolderId }: CurveProps) {
 	if (!selectedFolderId) {
 		return (
 			<div className="curve-container">
-				<div className="carousel-bottom basegrid">
-					<div>Por favor, selecciona una carpeta para ver los marcadores.</div>
-				</div>
+				<div className="carousel-bottom basegrid">{/* <LoadingBookmarkPlaceholder /> */}</div>
 			</div>
 		);
 	}
@@ -82,9 +83,13 @@ function Curve({ selectedFolderId }: CurveProps) {
 					return (
 						<div key={`div-${index + 1}`} className={`div${index + 1}`}>
 							{bookmark ? (
-								<a href={bookmark.url} target="_blank" rel="noopener noreferrer" title={bookmark.title}>
-									{/* Display favicon or initial, or just title */}
-									{bookmark.title.length > 15 ? `${bookmark.title.substring(0, 15)}...` : bookmark.title}
+								<a
+									style={{ textDecoration: "none" }}
+									href={bookmark.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									title={bookmark.title}>
+									<SingleScreenshot bookmarkURL={bookmark.url} bookmarkTitle={bookmark.title} />
 								</a>
 							) : (
 								<EmptyBookmarkPlaceholder />
