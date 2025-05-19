@@ -2,6 +2,8 @@ import "../styles/index.css";
 import React, { useState, useEffect } from "react";
 import { db, type Bookmark } from "../lib/dexie";
 
+import EmptyBookmarkPlaceholder from "./EmptyBookmarkPlaceholder";
+
 interface CurveProps {
 	selectedFolderId: string | null;
 }
@@ -85,7 +87,7 @@ function Curve({ selectedFolderId }: CurveProps) {
 									{bookmark.title.length > 15 ? `${bookmark.title.substring(0, 15)}...` : bookmark.title}
 								</a>
 							) : (
-								`${index + 1}` // Poner aqui un placeholder
+								<EmptyBookmarkPlaceholder />
 							)}
 						</div>
 					);
