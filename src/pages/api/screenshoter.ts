@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { db, type ScreenshotCache } from "../../lib/dexie";
 import { client } from "../../lib/cloudflare";
 
 const CLOUDFLARE_ACCOUNT_ID = import.meta.env.CLOUDFLARE_ACCOUNT_ID;
@@ -15,6 +16,7 @@ export const POST: APIRoute = async ({ request }) => {
 		const body = await request.json();
 		const targetUrl = body.url;
 
+		// Si por alguna razón no se envía la URL, se devuelve un error 400
 		if (!targetUrl || typeof targetUrl !== "string") {
 			return new Response(JSON.stringify({ error: "Se requiere la URL en el cuerpo de la solicitud." }), {
 				status: 400, // Bad Request
