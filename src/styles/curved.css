@@ -2,12 +2,51 @@
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 }
 
+.bookmark-text-container {
+	z-index: 2;
+}
+
+.bookmark-title {
+	color: #ffffff;
+	font-size: 0.5em;
+	text-align: center;
+	margin-top: 1rem;
+	text-decoration: none;
+}
+
+.bookmark-url {
+	color: #ffffff;
+	font-size: 0.4em;
+	text-align: center;
+	margin-top: 0.5rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-decoration: none;
+	background-color: rgb(51, 52, 53);
+	padding: 0.2rem 0.8rem;
+	border-radius: 9999px;
+}
+
+.screenshot-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .curve-container {
 	display: flex;
+	width: 100%;
+	max-width: 100vw;
+	margin-top: -5%;
+	overflow: hidden;
+	min-height: 200px;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
-	height: 100vh; /* Full viewport height */
+	height: 100vh;
 }
 
 .basegrid {
@@ -32,18 +71,18 @@
 	--z-col-near: -200px; /* Columns 2 & 3 are closer */
 
 	/* Additional Z-offset for rows to enhance vertical curve */
-	--z-row-edge-offset: -20px; /* Rows 1 & 3 pushed even further back */
+	--z-row-edge-offset: -10px; /* Rows 1 & 3 pushed even further back */
 }
 
 .carousel-bottom {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr); /* 4 columns */
 	grid-template-rows: repeat(3, 1fr); /* 3 rows */
-	gap: 0px; /* Space between items */
+	gap: 1rem; /* Space between items */
 
-	width: 100%; /* Adjust as needed */
+	width: 100%;
 	max-width: 90%; /* Maximum width of the grid */
-	margin: 5px auto; /* Centering the grid */
+	/* margin: 1rem; */
 
 	/* --- Setup 3D Rendering Context --- */
 	perspective: var(--perspective-value);
@@ -51,16 +90,19 @@
 	transform: rotateX(var(--container-rotate-x));
 	/* Ensures children are transformed in 3D space, not flattened */
 	transform-style: preserve-3d;
-	perspective-origin: center -25%;
+	perspective-origin: center -30%;
 	/* You can also adjust perspective-origin here if needed, e.g., perspective-origin: center 25%; */
 }
 
 .carousel-bottom > div {
-	background-color: aqua; /* Your original background color */
-	width: 100%; /* Items will take full width of their grid cell */
-	height: 230px; /* Your original height */
+	/* background-color: aqua; */
+	width: 105%; /* Items will take full width of their grid cell */
+	height: 105%; /* Your original height */
+	min-width: 120px;
+	min-height: 150px;
+	/* aspect-ratio: 16/9; */
 	padding: 0; /* Your original padding */
-	margin: 5px;
+	/* margin: 1px; */
 
 	display: flex; /* For centering the text content */
 	align-items: center;
@@ -84,7 +126,8 @@
 .carousel-bottom .div4 {
 	--item-rotate-x: 0deg;
 	/* --item-z-row-offset: var(--z-row-edge-offset); */
-	--item-z-row-offset: 0px;
+	--item-z-row-offset: 5px;
+	/* margin-bottom: 0.2rem; */
 }
 
 /* Row 2 (Middle Row) */
@@ -94,6 +137,8 @@
 .carousel-bottom .div8 {
 	--item-rotate-x: 0deg; /* Middle row items are not tilted on X-axis */
 	--item-z-row-offset: 10px; /* Middle row is the baseline for Z depth */
+	margin-top: 1rem;
+	/* margin-bottom: 10px; */
 }
 
 /* Row 3 (Bottom Row) */
@@ -105,6 +150,7 @@
 	--item-rotate-x: 0deg;
 	/* --item-z-row-offset: var(--z-row-edge-offset); */
 	--item-z-row-offset: 0px;
+	margin-top: 2rem;
 
 	display: inline-block;
 
@@ -123,7 +169,7 @@
 .carousel-bottom .div1,
 .carousel-bottom .div5,
 .carousel-bottom .div9 {
-	margin-left: 30px;
+	/* margin-left: 0px; */
 	transform: rotateY(var(--col-angle-far)) rotateX(var(--item-rotate-x))
 		translateZ(calc(var(--z-col-far) + var(--item-z-row-offset)));
 }
@@ -132,7 +178,7 @@
 .carousel-bottom .div2,
 .carousel-bottom .div6,
 .carousel-bottom .div10 {
-	margin-left: 25px;
+	/* margin-left: 0%; */
 	transform: rotateY(calc(0.6 * var(--col-angle-near))) rotateX(calc(1 * var(--item-rotate-x)))
 		translateZ(calc(1.2 * var(--z-col-near) + 0.1 * var(--item-z-row-offset)));
 }
@@ -141,7 +187,7 @@
 .carousel-bottom .div3,
 .carousel-bottom .div7,
 .carousel-bottom .div11 {
-	margin-left: -35px;
+	margin-left: -3rem;
 	transform: rotateY(calc(-0.5 * var(--col-angle-near))) rotateX(calc(1.5 * var(--item-rotate-x)))
 		translateZ(calc(1.2 * var(--z-col-near) + var(--item-z-row-offset)));
 }
@@ -150,21 +196,16 @@
 .carousel-bottom .div4,
 .carousel-bottom .div8,
 .carousel-bottom .div12 {
-	margin-left: -50px;
+	margin-left: -3rem;
 	transform: rotateY(calc(-1 * var(--col-angle-far))) rotateX(var(--item-rotate-x))
 		translateZ(calc(var(--z-col-far) + var(--item-z-row-offset)));
 }
 
-/* .carousel-bottom {
-			display: grid;
-			grid-template-columns: repeat(4, 1fr);
-			grid-template-rows: repeat(3, 1fr);
-			gap: 8px;
-
-			& > div {
-				background-color: aqua;
-				width: 100%;
-				height: 200px;
-				padding: 0;
-			}
-		} */
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

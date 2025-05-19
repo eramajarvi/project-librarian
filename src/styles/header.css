@@ -6,7 +6,7 @@
 	padding: 1rem;
 	position: sticky;
 	top: 10px;
-	z-index: 5;
+	z-index: 1000;
 	background: linear-gradient(to bottom, #3a3c4d 0%, #2c2e3c 50%, #252634 51%, #38394a 100%);
 	color: white;
 	border: 0.1em solid rgba(255, 255, 255, 0.2);
