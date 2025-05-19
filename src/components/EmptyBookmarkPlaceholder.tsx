@@ -1,3 +1,5 @@
+import "../styles/index.css";
+
 import React from "react";
 import PlaceholderGradient from "../assets/SnapshotPlaceholderGradient.png";
 import PlaceholderCompass from "../assets/SnapshotPlaceholderCompass.png";
