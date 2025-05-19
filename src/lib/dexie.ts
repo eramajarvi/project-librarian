@@ -1,25 +1,35 @@
 import Dexie, { type Table } from "dexie";
 
 export interface Bookmark {
-	id: string;
-	folder_id: number;
+	bookmark_id: string;
+	user_id: string;
+	folder_id: string;
 	url: string;
 	title: string;
-	created_at: number;
+	created_at: string;
+	updated_at: string;
 	sync_status: "pending" | "synced" | "error";
 }
 
-export interface BookmarksFolder {
-	id: string;
+export interface Folder {
+	folder_id: string;
+	user_id: string;
+	folder_name: string;
+	folder_emoji: string;
+	created_at: string;
+	updated_at: string;
+	sync_status: "pending" | "synced" | "error";
 }
 
 class LibrarianDatabase extends Dexie {
 	bookmarks!: Table<Bookmark>;
+	folders!: Table<Folder>;
 
 	constructor() {
-		super("LocalDB");
+		super("LocalLibrarianDB");
 		this.version(1).stores({
-			bookmarks: "id, createdAt, syncStatus", // Indexes
+			bookmarks: "bookmark_id, user_id, folder_id, url, title, created_at, updated_at, sync_status",
+			folders: "folder_id, user_id, folder_name, folder_emoji, created_at, updated_at, sync_status",
 		});
 	}
 }
