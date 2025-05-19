@@ -1,5 +1,12 @@
 import { useStore } from "@nanostores/react";
 import { activeView } from "../stores/activeViewStore";
+import { ClerkProvider } from "@clerk/clerk-react";
+
+const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+if (!publishableKey) {
+	throw new Error("Add your Clerk Publishable Key to the .env file");
+}
 
 import ReadingListView from "./ReadingListView";
 import BookmarksView from "./BookmarksView";
@@ -22,13 +29,17 @@ export default function ViewManager({ username, isOwner }: ViewManagerProps) {
 			case "bookmarks":
 				return <BookmarksView {...commonProps} />;
 			case "topSites":
-				return <TopSitesView />;
+				return <TopSitesView {...commonProps} />;
 			case "default":
 			default:
 				// Default to TopSitesView if no specific view is set
-				return <BookmarksView />;
+				return <TopSitesView {...commonProps} />;
 		}
 	};
 
-	return <main>{renderView()}</main>;
+	return (
+		<ClerkProvider publishableKey={publishableKey}>
+			<main>{renderView()}</main>;
+		</ClerkProvider>
+	);
 }
