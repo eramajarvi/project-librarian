@@ -1,3 +1,14 @@
+:root {
+	--start-color: #6fb4f7;
+	--end-color: #1a82fb;
+}
+
+.bookmarks-dropdown-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 /* Enter into custom mode */
 select,
 ::picker(select) {
@@ -48,22 +59,27 @@ selectedcontent {
 }
 
 /* Style what you see before you open the select dropdown */
-selectedcontent {
-	height: 1.2rem;
-	width: 12rem;
-	grid-template-columns: 1.5rem auto;
-	width: auto;
-}
 
 select {
 	border: 2px solid rgba(0, 128, 255, 0.8);
 	border-radius: 9999px;
-	display: grid;
-	grid-template-columns: 1fr 1fr 5fr;
-	padding: 0.7em 1em 0.7em 1em;
+	padding: 0.7em 3.5em 0.7em 1.5em;
 	width: auto;
-	align-items: center;
-	background: linear-gradient(var(--start-color, #6fb4f7), var(--end-color, #1a82fb));
+	cursor: pointer;
+
+	/* --- Background Magic --- */
+	/* We'll define two background layers. The first one listed is on top. */
+
+	background-image: linear-gradient(#fcfcfc 40%, #ececec 55%), linear-gradient(#6fb4f7, #1a82fb);
+
+	background-size: calc(100% - 25px) 100%, 100% 100%;
+
+	background-position: left center, right center;
+
+	background-repeat: no-repeat;
+
+	/* Ensure text color is readable on both backgrounds */
+	color: black;
 }
 
 .arrow-container {
@@ -79,20 +95,10 @@ select {
 	background-position: right;
 	width: 1rem;
 	height: 1rem;
+	margin-left: -1.5rem;
+	pointer-events: none;
 
 	.bookmarks-dropdown:open & {
 		rotate: x 180deg;
 	}
-}
-
-.old-bookmarks-dropdown {
-	padding: 0.7em 3em 0.7em 1em;
-	border: 0;
-	border-radius: 9999px;
-	background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 12" fill="none" stroke="%23fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M2,4 l3,-3 3,3"/%3E%3Cpath d="M2,8 l3,3 3,-3"/%3E%3C/svg%3E')
-			no-repeat right 1em center,
-		linear-gradient(var(--start-color, #6fb4f7), var(--end-color, #1a82fb));
-	background-size: 1em, 100%;
-	box-shadow: inset 0 0 0 0.05em #0003, 0 0.05em 0.02em 0 #0003, 0 0 0 var(--ring, 0) #3b99fc80;
-	color: white;
 }
