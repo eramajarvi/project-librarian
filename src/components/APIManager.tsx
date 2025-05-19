@@ -13,16 +13,18 @@ function APIManager() {
 	// Check if the placeholder data has been created
 	const [hasRun, setHasRun] = useState(false);
 
-	// If the user is a new user, let's create example bookmarks and folders :)
+	// Si el usuario es nuevo, le añadimos algunos datos de ejemplo :)
 	useEffect(() => {
 		if (!isLoaded) return;
 
 		const createdAt = user?.createdAt;
+		console.log("User created at:", createdAt);
 
 		if (!createdAt) return;
 
 		const now = new Date();
 		const diferenciaEnMinutos = Math.abs(now.getTime() - createdAt.getTime()) / 1000 / 60;
+		console.log("Diferencia en minutos:", diferenciaEnMinutos);
 
 		if (user && !hasRun && diferenciaEnMinutos < 3) {
 			createPlaceholderDataDexie(user);
