@@ -105,6 +105,14 @@
 	--item-rotate-x: 0deg;
 	/* --item-z-row-offset: var(--z-row-edge-offset); */
 	--item-z-row-offset: 0px;
+
+	display: inline-block;
+
+	div {
+		display: block;
+		-webkit-box-reflect: below 0px
+			linear-gradient(to bottom, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.25) 100%);
+	}
 }
 
 /* --- Apply Column-Specific Transforms (incorporating row variables) --- */
