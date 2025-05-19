@@ -19,7 +19,9 @@ const { title } = Astro.props;
 	</head>
 
 	<body class="black-gradient">
-		<Header client:load />
-		<slot />
+		<div class="header-container">
+			<Header client:load />
+			<slot />
+		</div>
 	</body>
 </html>
