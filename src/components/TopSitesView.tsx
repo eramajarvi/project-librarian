@@ -1,108 +1,178 @@
 import "../styles/index.css";
 import React, { useState, useEffect } from "react";
-import { db, type Folder } from "../lib/dexie";
 
+import { useUser } from "@clerk/clerk-react";
 import BookmarksFolders from "./BookmarksFolders";
 import Curve from "./Curve";
 import EditFolder from "./EditFolder";
+import AddFolder, { type NewFolderData } from "./AddFolder";
 
-interface ViewManagerProps {
-	username: string;
-	isOwner: boolean;
-}
+import {
+	addNewFolder as serviceAddNewFolder,
+	updateFolder as serviceUpdateFolder,
+	deleteFolder as serviceDeleteFolder,
+	getFoldersForUser as serviceGetFoldersForUser,
+	getFolderById as serviceGetFolderById,
+	type Folder,
+} from "../lib/folderService";
 
-function TopSitesView({ username, isOwner }: ViewManagerProps) {
-	const [currentFolderId, setCurrentFolderId] = useState<string | null>("");
-	const [initialFolderLoaded, setInitialFolderLoaded] = useState(false);
+interface ViewManagerProps {}
+
+function TopSitesView({}: ViewManagerProps) {
+	const { isSignedIn, user, isLoaded } = useUser();
+
+	const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
 	const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+	const [initialFolderLoaded, setInitialFolderLoaded] = useState(false);
+	const [folders, setFolders] = useState<Folder[]>([]);
 
 	const [isEditFolderOpen, setIsEditFolderOpen] = useState(false);
+	const [isAddFolderOpen, setIsAddFolderOpen] = useState(false);
 
+	const isOwner = isSignedIn && user;
+
+	// --- Editar Carpeta Handlers ---
 	const handleOpenEditFolder = () => {
-		if (selectedFolder) {
-			setIsEditFolderOpen(true);
-		} else {
-			console.warn("Ninguna carpeta seleccionada para editar.");
-		}
+		if (selectedFolder) setIsEditFolderOpen(true);
 	};
 	const handleCloseEditFolder = () => setIsEditFolderOpen(false);
 
-	const handleAcceptEditFolder = async (updatedFolderData: Folder) => {
-		console.log("Accepted edit for folder:", updatedFolderData);
-		if (!updatedFolderData || !updatedFolderData.folder_id) {
-			console.error("Cannot update folder: folder data or ID is missing.", updatedFolderData);
+	const handleAcceptEditFolder = async (updatedFolderDataFromModal: Folder) => {
+		if (!selectedFolder || !selectedFolder.folder_id) {
+			console.error("Ninguna carpeta seleccionada para editar");
 			handleCloseEditFolder();
 			return;
 		}
-
-		console.log("Attempting to update folder in Dexie:", updatedFolderData);
-
 		try {
-			const numUpdated = await db.folders.update(updatedFolderData.folder_id, {
-				folder_name: updatedFolderData.folder_name,
-				folder_emoji: updatedFolderData.folder_emoji,
-			});
-
-			if (numUpdated > 0) {
-				console.log("Folder updated successfully in Dexie:", updatedFolderData);
-
-				setSelectedFolder(updatedFolderData);
-			} else {
-				console.warn("Folder not found or no changes made for ID:", updatedFolderData.folder_id);
-			}
+			const updates: Partial<Pick<Folder, "folder_name" | "folder_emoji" | "updated_at">> = {
+				folder_name: updatedFolderDataFromModal.folder_name,
+				folder_emoji: updatedFolderDataFromModal.folder_emoji,
+				updated_at: updatedFolderDataFromModal.updated_at,
+			};
+			const updatedFolder = await serviceUpdateFolder(selectedFolder.folder_id, updates);
+			setSelectedFolder(updatedFolder);
+			// Actualizar la lista de carpetas localmente si es necesario
+			setFolders((prev) => prev.map((f) => (f.folder_id === updatedFolder.folder_id ? updatedFolder : f)));
 		} catch (error) {
-			console.error("Failed to update folder in Dexie:", error);
+			console.error("Error al actualizar la carpeta:", error);
+			// mostrar un mensaje de error al usuario
 		}
-
 		handleCloseEditFolder();
 	};
 
-	useEffect(() => {
-		async function fetchAndSetInitialFolderId() {
-			if (!initialFolderLoaded) {
-				const folders = await db.folders.orderBy("created_at").toArray();
+	// --- Añadir Carpeta Handlers ---
+	const handleOpenAddFolder = () => setIsAddFolderOpen(true);
+	const handleCloseAddFolder = () => setIsAddFolderOpen(false);
 
-				if (folders.length > 0) {
-					setCurrentFolderId(folders[0].folder_id);
-					console.log("Initial folder ID selected:", folders[0].folder_id);
+	const handleAcceptAddFolder = async (newFolderDetails: NewFolderData) => {
+		if (!user || !user.id) {
+			console.error("El usuario no ha iniciado sesión. No se puede añadir una carpeta.");
+			handleCloseAddFolder();
+			return;
+		}
+
+		try {
+			const newlyAddedFolder = await serviceAddNewFolder(newFolderDetails, user.id);
+
+			setFolders((prev) =>
+				[...prev, newlyAddedFolder].sort((a, b) => {
+					const dateA = new Date(a.created_at).getTime();
+					const dateB = new Date(b.created_at).getTime();
+					return dateA - dateB;
+				})
+			);
+			setCurrentFolderId(newlyAddedFolder.folder_id); // Hacer la nueva carpeta la seleccionada
+			// la selectedFolder se actualizará por el useEffect que escucha currentFolderId
+		} catch (error) {
+			console.error("Error al añadir la carpeta:", error);
+		}
+		handleCloseAddFolder();
+	};
+
+	// --- Delete Folder Handler ---
+	const handleDeleteFolder = async (folderIdToDelete: string) => {
+		if (!selectedFolder || selectedFolder.folder_id !== folderIdToDelete || !user) {
+			handleCloseEditFolder();
+			return;
+		}
+		if (window.confirm(`¿Tienes la certeza de que quieres eliminar la carpeta "${selectedFolder.folder_name}"?`)) {
+			try {
+				await serviceDeleteFolder(folderIdToDelete);
+				setFolders((prev) => prev.filter((f) => f.folder_id !== folderIdToDelete));
+				setCurrentFolderId(null); // Hace que la carpeta seleccionada sea null
+				// selectedFolder se actualizará por el useEffect que escucha currentFolderId
+				setSelectedFolder(null);
+				setInitialFolderLoaded(false);
+			} catch (error) {
+				console.error("Error al eliminar la carpeta:", error);
+			}
+		}
+		handleCloseEditFolder();
+	};
+
+	// Efecto para cargar las carpetas iniciales del usuario y establecer la selección
+	useEffect(() => {
+		async function loadUserFolders() {
+			if (isLoaded && user && user.id) {
+				const userFolders = await serviceGetFoldersForUser(user.id);
+				setFolders(userFolders);
+
+				if (userFolders.length > 0) {
+					// Si currentFolderId es null (por ejemplo, después de eliminar o carga inicial), establecer la primera carpeta como la seleccionada
+					if (currentFolderId === null || !userFolders.find((f) => f.folder_id === currentFolderId)) {
+						setCurrentFolderId(userFolders[0].folder_id);
+					}
 				} else {
-					console.log("No folders found to select initially.");
+					setCurrentFolderId(null);
+					setSelectedFolder(null);
 				}
+				setInitialFolderLoaded(true);
+			} else if (isLoaded && !user) {
+				setFolders([]);
+				setCurrentFolderId(null);
+				setSelectedFolder(null);
 				setInitialFolderLoaded(true);
 			}
 		}
-		fetchAndSetInitialFolderId();
-	}, [initialFolderLoaded]);
 
-	// Effect to fetch the folder object when currentFolderId changes
+		if (!initialFolderLoaded || (currentFolderId === null && folders.length > 0)) {
+			loadUserFolders();
+		}
+	}, [isLoaded, user, initialFolderLoaded, currentFolderId]);
+
+	// Efecto para obtener el objeto de carpeta seleccionado cuando currentFolderId cambia
 	useEffect(() => {
 		async function fetchSelectedFolderObject() {
-			if (currentFolderId) {
-				// Assuming 'folder_id' is the primary key or an indexed field for efficient lookup
-				const folder = await db.folders.get(currentFolderId);
-				if (folder) {
-					setSelectedFolder(folder);
-					console.log("Selected folder object:", folder);
+			if (currentFolderId && user && user.id) {
+				const folderFromState = folders.find((f) => f.folder_id === currentFolderId);
+				if (folderFromState) {
+					setSelectedFolder(folderFromState);
 				} else {
-					setSelectedFolder(null); // Folder not found
-					console.warn(`Folder with ID ${currentFolderId} not found.`);
+					const folderFromDb = await serviceGetFolderById(currentFolderId);
+					if (folderFromDb && folderFromDb.user_id === user.id) {
+						setSelectedFolder(folderFromDb);
+					} else {
+						setSelectedFolder(null);
+						console.warn(`Folder with ID ${currentFolderId} not found or access denied.`);
+						// setCurrentFolderId(null);
+					}
 				}
 			} else {
-				setSelectedFolder(null); // No folder ID selected
+				setSelectedFolder(null);
 			}
 		}
-
-		// Only try to fetch if an ID is present or initial loading is done
-		// to avoid fetching with null ID immediately on mount if initialFolderLoaded logic hasn't run
 		if (initialFolderLoaded || currentFolderId) {
 			fetchSelectedFolderObject();
 		}
-	}, [currentFolderId, initialFolderLoaded]); // Re-run if currentFolderId or initialFolderLoaded changes
+	}, [currentFolderId, initialFolderLoaded, user, folders]);
 
 	const handleFolderSelect = (folderId: string) => {
-		console.log("BookmarksManager: Folder selected:", folderId);
 		setCurrentFolderId(folderId);
 	};
+
+	if (!isLoaded) {
+		return <div>Loading user information...</div>;
+	}
 
 	return (
 		<div className="topsites-container">
@@ -110,25 +180,39 @@ function TopSitesView({ username, isOwner }: ViewManagerProps) {
 
 			<BookmarksFolders onFolderSelect={handleFolderSelect} initiallySelectedFolderId={currentFolderId || ""} />
 
-			<div className="edit-button-container">
-				<button className="base-button edit-button" onClick={handleOpenEditFolder}>
-					Editar
-				</button>
+			<div className="actions-button-container">
+				{isOwner && selectedFolder && (
+					<button className="base-button edit-button" onClick={handleOpenEditFolder}>
+						Editar
+					</button>
+				)}
 
-				<button className="base-button edit-button add-folder-button">Añadir carpeta</button>
-
-				{isEditFolderOpen && selectedFolder && (
-					<EditFolder
-						isOpen={isEditFolderOpen}
-						title={`Editar carpeta: ${selectedFolder.folder_name}`}
-						folder={selectedFolder}
-						onAccept={handleAcceptEditFolder}
-						onCancel={handleCloseEditFolder}
-						onDeleteFolder={() => console.log("Delete folder:", selectedFolder.folder_id)}>
-						<p></p>
-					</EditFolder>
+				{isOwner && (
+					<button className="base-button edit-button add-button" onClick={handleOpenAddFolder}>
+						Añadir carpeta
+					</button>
 				)}
 			</div>
+
+			{isEditFolderOpen && selectedFolder && isOwner && (
+				<EditFolder
+					isOpen={isEditFolderOpen}
+					title={`Editar: ${selectedFolder.folder_name}`}
+					folder={selectedFolder}
+					onAccept={handleAcceptEditFolder}
+					onCancel={handleCloseEditFolder}
+					onDeleteFolder={handleDeleteFolder}
+				/>
+			)}
+
+			{isAddFolderOpen && isOwner && (
+				<AddFolder
+					isOpen={isAddFolderOpen}
+					title="Crear Nueva Carpeta"
+					onAccept={handleAcceptAddFolder}
+					onCancel={handleCloseAddFolder}
+				/>
+			)}
 		</div>
 	);
 }
