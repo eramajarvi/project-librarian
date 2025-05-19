@@ -2,11 +2,15 @@ import "../styles/index.css";
 import React, { useState, useEffect } from "react";
 import { db, type Folder } from "../lib/dexie";
 
-function BookmarksFolders() {
+interface BookmarksFoldersProps {
+	onFolderSelect: (folderId: string) => void;
+	initiallySelectedFolderId: string;
+}
+
+function BookmarksFolders({ onFolderSelect, initiallySelectedFolderId }: BookmarksFoldersProps) {
 	const [folders, setFolders] = useState<Folder[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
-	const [selectedFolder, setSelectedFolder] = useState("");
 
 	useEffect(() => {
 		async function fetchFolders() {
@@ -16,12 +20,15 @@ function BookmarksFolders() {
 				setFolders(allFolders);
 				setError(null);
 
-				// Fijar la primera carpeta como seleccionada
-				if (allFolders.length > 0) {
-					setSelectedFolder(allFolders[0].folder_id);
-					console.log("Selected folder:", allFolders[0].folder_id);
-				} else {
-					setSelectedFolder("");
+				if (!initiallySelectedFolderId && allFolders.length > 0) {
+					onFolderSelect(allFolders[0].folder_id);
+					console.log("BookmarksFolders: Carpeta inicial seleccionada y notificado al padre:", allFolders[0].folder_id);
+				} else if (
+					initiallySelectedFolderId &&
+					!allFolders.some((f) => f.folder_id === initiallySelectedFolderId) &&
+					allFolders.length > 0
+				) {
+					onFolderSelect(allFolders[0].folder_id);
 				}
 			} catch (err) {
 				console.error("Hubo un error al cargar las carpetas:", err);
@@ -33,26 +40,19 @@ function BookmarksFolders() {
 		}
 
 		fetchFolders();
-	}, []);
+	}, [onFolderSelect]);
 
 	const handleFolderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const selectedValue = event.target.value;
-		setSelectedFolder(selectedValue);
-		console.log("Selected folder:", selectedValue);
+		onFolderSelect(selectedValue);
+		console.log("BookmarksFolders: Folder changed to:", selectedValue);
 	};
 
 	if (loading) {
 		return (
 			<div className="bookmarks-dropdown-wrapper">
-				<select
-					id="bookmarksFolders"
-					name="bookmarksFoldersSelector"
-					className="bookmarks-dropdown"
-					value="Cargando..."
-					disabled>
-					<option value="Cargando..." disabled>
-						Cargando...
-					</option>
+				<select className="bookmarks-dropdown" value="" disabled>
+					<option value="">Cargando carpetas...</option>
 				</select>
 			</div>
 		);
@@ -61,15 +61,8 @@ function BookmarksFolders() {
 	if (error) {
 		return (
 			<div className="bookmarks-dropdown-wrapper">
-				<select
-					id="bookmarksFolders"
-					name="bookmarksFoldersSelector"
-					className="bookmarks-dropdown"
-					value="Error"
-					disabled>
-					<option value="Error" disabled>
-						Error al cargar las carpetas
-					</option>
+				<select className="bookmarks-dropdown" value="" disabled>
+					<option value="">Error al cargar carpetas</option>
 				</select>
 			</div>
 		);
@@ -81,29 +74,13 @@ function BookmarksFolders() {
 				id="bookmarksFolders"
 				name="bookmarksFoldersSelector"
 				className="bookmarks-dropdown"
-				value={selectedFolder}
+				value={initiallySelectedFolderId} // Value is controlled by parent
 				onChange={handleFolderChange}>
-				{/*  */}
-
-				{/* <option value="" disabled={folders.length > 0}>
-					{folders.length > 0 ? "" : "No folders available"}
-				</option> */}
-
 				{folders.map((folder) => (
 					<option key={folder.folder_id} value={folder.folder_id}>
 						{folder.folder_emoji} {folder.folder_name}
 					</option>
 				))}
-
-				{/* <option value="one">
-					<p>🦁</p>
-					<div>editar</div>
-				</option>
-
-				<option value="four">
-					<p>🚨</p>
-					<div>eliminar</div>
-				</option> */}
 			</select>
 
 			<label htmlFor="bookmarksFolders" className="arrow-label-wrapper">
