@@ -94,6 +94,7 @@ export default function SingleScreenshot({ bookmarkURL, bookmarkTitle }: SingleS
 					position: "relative",
 					width: "100%",
 					height: "100%",
+					objectFit: "fill",
 					zIndex: 2,
 				}}
 			/>
