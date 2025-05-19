@@ -16,13 +16,11 @@ interface BookmarksViewProps {
 
 export default function BookmarksView({ username, isOwner }: any) {
 	return (
-		<ClerkProvider publishableKey={publishableKey}>
-			<div>
-				<h2>{isOwner ? "Your" : `${username}'s`} Bookmarks</h2>
-				<p>Bookmarks items will go here...</p>
-				{/* <TestTurso /> */}
-				<SingleScreenshot targetUrl="https://www.google.com/" />
-			</div>
-		</ClerkProvider>
+		<div>
+			<h2>{isOwner ? "Your" : `${username}'s`} Bookmarks</h2>
+			<p>Bookmarks items will go here...</p>
+			<TestTurso />
+			{/* <SingleScreenshot targetUrl="https://www.google.com/" /> */}
+		</div>
 	);
 }
