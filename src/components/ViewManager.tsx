@@ -1,6 +1,8 @@
 import { useStore } from "@nanostores/react";
 import { activeView } from "../stores/activeViewStore";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
+import type { UserResource } from "@clerk/types";
 
 const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -15,9 +17,10 @@ import TopSitesView from "./TopSitesView";
 interface ViewManagerProps {
 	username: string;
 	isOwner: boolean;
+	user?: UserResource;
 }
 
-export default function ViewManager({ username, isOwner }: ViewManagerProps) {
+export default function ViewManager({ username, isOwner, user }: ViewManagerProps) {
 	const currentView = useStore(activeView);
 
 	const renderView = () => {
@@ -32,14 +35,13 @@ export default function ViewManager({ username, isOwner }: ViewManagerProps) {
 				return <TopSitesView {...commonProps} />;
 			case "default":
 			default:
-				// Default to TopSitesView if no specific view is set
 				return <TopSitesView {...commonProps} />;
 		}
 	};
 
 	return (
 		<ClerkProvider publishableKey={publishableKey}>
-			<main>{renderView()}</main>;
+			<main>{renderView()}</main>
 		</ClerkProvider>
 	);
 }
