@@ -22,11 +22,11 @@ export default function ViewManager({ username, isOwner }: ViewManagerProps) {
 			case "bookmarks":
 				return <BookmarksView {...commonProps} />;
 			case "topSites":
-				return <TopSitesView {...commonProps} />;
+				return <TopSitesView />;
 			case "default":
 			default:
 				// Default to TopSitesView if no specific view is set
-				return <TopSitesView username={username} />;
+				return <BookmarksView />;
 		}
 	};
 

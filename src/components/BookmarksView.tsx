@@ -1,6 +1,7 @@
 import "../styles/index.css";
 import { ClerkProvider } from "@clerk/clerk-react";
 import TestTurso from "./test-turso";
+import SingleScreenshot from "./SingleScreenshot";
 
 const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -19,7 +20,8 @@ export default function BookmarksView({ username, isOwner }: any) {
 			<div>
 				<h2>{isOwner ? "Your" : `${username}'s`} Bookmarks</h2>
 				<p>Bookmarks items will go here...</p>
-				<TestTurso />
+				{/* <TestTurso /> */}
+				<SingleScreenshot targetUrl="https://www.google.com/" />
 			</div>
 		</ClerkProvider>
 	);
