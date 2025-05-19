@@ -6,6 +6,7 @@
 @import "./header.css" layer(components);
 @import "./curved.css" layer(components);
 @import "./dropdown.css" layer(components);
+@import "./buttons.css" layer(components);
 @import "./utilities.css" layer(utilities);
 
 @import "tw-animate-css";
