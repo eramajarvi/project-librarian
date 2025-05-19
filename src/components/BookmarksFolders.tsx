@@ -15,6 +15,14 @@ function BookmarksFolders() {
 				const allFolders = await db.folders.toArray();
 				setFolders(allFolders);
 				setError(null);
+
+				// Fijar la primera carpeta como seleccionada
+				if (allFolders.length > 0) {
+					setSelectedFolder(allFolders[0].folder_id);
+					console.log("Selected folder:", allFolders[0].folder_id);
+				} else {
+					setSelectedFolder("");
+				}
 			} catch (err) {
 				console.error("Hubo un error al cargar las carpetas:", err);
 				setError(err instanceof Error ? err : new Error("Unknown error"));
@@ -36,8 +44,13 @@ function BookmarksFolders() {
 	if (loading) {
 		return (
 			<div className="bookmarks-dropdown-wrapper">
-				<select id="bookmarksFolders" name="bookmarksFoldersSelector" className="bookmarks-dropdown">
-					<option value="" disabled>
+				<select
+					id="bookmarksFolders"
+					name="bookmarksFoldersSelector"
+					className="bookmarks-dropdown"
+					value="Cargando..."
+					disabled>
+					<option value="Cargando..." disabled>
 						Cargando...
 					</option>
 				</select>
@@ -48,8 +61,13 @@ function BookmarksFolders() {
 	if (error) {
 		return (
 			<div className="bookmarks-dropdown-wrapper">
-				<select id="bookmarksFolders" name="bookmarksFoldersSelector" className="bookmarks-dropdown">
-					<option value="" disabled>
+				<select
+					id="bookmarksFolders"
+					name="bookmarksFoldersSelector"
+					className="bookmarks-dropdown"
+					value="Error"
+					disabled>
+					<option value="Error" disabled>
 						Error al cargar las carpetas
 					</option>
 				</select>
@@ -67,9 +85,9 @@ function BookmarksFolders() {
 				onChange={handleFolderChange}>
 				{/*  */}
 
-				<option value="" disabled={folders.length > 0}>
-					{folders.length > 0 ? "Select a folder..." : "No folders available"}
-				</option>
+				{/* <option value="" disabled={folders.length > 0}>
+					{folders.length > 0 ? "" : "No folders available"}
+				</option> */}
 
 				{folders.map((folder) => (
 					<option key={folder.folder_id} value={folder.folder_id}>
