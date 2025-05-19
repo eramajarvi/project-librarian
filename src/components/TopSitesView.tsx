@@ -171,7 +171,7 @@ function TopSitesView({}: ViewManagerProps) {
 	};
 
 	if (!isLoaded) {
-		return <div>Loading user information...</div>;
+		return <div className="empty-state"></div>;
 	}
 
 	return (
