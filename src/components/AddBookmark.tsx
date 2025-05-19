@@ -103,13 +103,15 @@ const AddBookmark: React.FC<AddBookmarkProps> = ({
 				</h2>
 				<div className="modal-body">
 					<div>
-						<label htmlFor="bookmarkUrlInput">URL del Marcador:</label>
+						<label htmlFor="bookmarkUrlInput" className="label-block">
+							URL del marcador:
+						</label>
 						<input
 							type="url"
 							id="bookmarkUrlInput"
 							value={bookmarkUrl}
-							className={`textfield ${urlError ? "input-error" : ""}`}
-							placeholder="https://ejemplo.com"
+							className="bookmark-url-input textfield"
+							placeholder="https://midu.dev"
 							autoFocus
 							onChange={(e) => {
 								setBookmarkUrl(e.target.value);
@@ -121,14 +123,17 @@ const AddBookmark: React.FC<AddBookmarkProps> = ({
 						/>
 						{urlError && <p className="error-message">{urlError}</p>}
 					</div>
+
 					<div style={{ marginTop: "1rem" }}>
-						<label htmlFor="bookmarkNameInput">Nombre del Marcador:</label>
+						<label htmlFor="bookmarkNameInput" className="label-block">
+							Nombre del marcador:
+						</label>
 						<input
 							type="text"
 							id="bookmarkNameInput"
 							value={bookmarkName}
-							className={`textfield ${nameError ? "input-error" : ""}`}
-							placeholder="Nombre descriptivo"
+							className="bookmark-url-input textfield"
+							placeholder="Midudev - Cursos de programación y desarrollo web"
 							maxLength={50}
 							onChange={(e) => {
 								setBookmarkName(e.target.value);
@@ -142,7 +147,7 @@ const AddBookmark: React.FC<AddBookmarkProps> = ({
 					</div>
 				</div>
 				<div className="modal-footer">
-					<button className="base-button secondary-button" onClick={onCancel}>
+					<button className="base-button edit-button" onClick={onCancel}>
 						Cancelar
 					</button>
 					<button className="base-button accept-button" onClick={handleAccept} disabled={isSubmitDisabled}>
