@@ -25,11 +25,11 @@ const BookmarkPlaceholder: React.FC<BookmarkPlaceholderProps> = ({ bookmarkURL, 
 		/>
 		<div className="bookmark-text-container">
 			<p className="bookmark-title">{bookmarkTitle}</p>
-			<a className="bookmark-url" href={bookmarkURL} target="_blank" rel="noopener noreferrer">
+			<div className="bookmark-url">
 				{bookmarkURL.replace(/^https?:\/\//, "").length > 40
 					? bookmarkURL.replace(/^https?:\/\//, "").slice(0, 40) + "..."
 					: bookmarkURL.replace(/^https?:\/\//, "")}
-			</a>
+			</div>
 		</div>
 	</div>
 );
