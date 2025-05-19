@@ -15,7 +15,7 @@
 }
 
 /* Estilos del boton editar */
-.edit-button-container {
+.actions-button-container {
 	display: flex;
 	justify-content: left;
 	align-items: center;
@@ -33,7 +33,7 @@
 	border: 1px solid #2a2a2a;
 }
 
-.add-folder-button {
+.add-button {
 	margin-left: 0.3rem;
 }
 
@@ -47,6 +47,7 @@
 	background-color: #1a82fb;
 	background-image: linear-gradient(#6fb4f7, #1a82fb);
 	border: 1px solid #1a82fb;
+	line-height: 1.5rem;
 }
 
 .edit-button:hover {
@@ -141,6 +142,13 @@
 	justify-content: flex-end;
 	gap: 10px;
 	margin-top: auto;
+}
+
+.folder-input-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 16px;
 }
 
 /*  */
