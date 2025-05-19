@@ -283,6 +283,16 @@ export async function createPlaceholderDataDexie(user: UserResource) {
 			updated_at: now,
 			sync_status: "pending",
 		},
+		{
+			bookmark_id: crypto.randomUUID(),
+			user_id: user.id,
+			folder_id: placeholderFolders[3].folder_id,
+			url: "https://eramajarvi.com/",
+			title: "James Perez",
+			created_at: now,
+			updated_at: now,
+			sync_status: "pending",
+		},
 	];
 
 	await db.folders.bulkPut(placeholderFolders);
