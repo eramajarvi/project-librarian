@@ -1,27 +1,45 @@
 import "../styles/index.css";
+import "../styles/singleScreenshot.css";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react"; // Added useRef
 import { db } from "../lib/dexie";
 
 import LoadingBookmarkPlaceholder from "./LoadingBookmarkPlaceholder";
 import BookmarkPlaceholder from "./BookmarkPlaceholder";
-import EmptyBookmarkPlaceholder from "./EmptyBookmarkPlaceholder";
+
+interface ScreenshotCacheEntry {
+	url: string;
+	image_base64: string;
+	created_at: string;
+}
 
 interface SingleScreenshotProps {
 	bookmarkURL: string;
 	bookmarkTitle: string;
 }
 
+// Make sure your Dexie definition includes this table
+// Example:
+// db.version(X).stores({
+//   ...,
+//   screenshot_cache: 'url, created_at' // 'url' is primary key
+// });
+// Add screenshot_cache to your Dexie class:
+// screenshot_cache!: Table<ScreenshotCacheEntry, string>;
+
 export default function SingleScreenshot({ bookmarkURL, bookmarkTitle }: SingleScreenshotProps) {
-	const [screenshot, setScreenshot] = useState<string | null>(null);
+	// Your existing state for fetching/caching
 	const [imageSrc, setImageSrc] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const nowHolder = Date.now();
 	const now = new Date(nowHolder).toISOString();
 
+	// State for zoom functionality
+	const [isZoomed, setIsZoomed] = useState(false);
+	const screenshotContainerRef = useRef<HTMLDivElement>(null);
+
 	useEffect(() => {
-		// If no targetUrl is provided, don't attempt to fetch
 		if (!bookmarkURL) {
 			setLoading(false);
 			setError("No URL provided to screenshot.");
@@ -29,12 +47,11 @@ export default function SingleScreenshot({ bookmarkURL, bookmarkTitle }: SingleS
 		}
 
 		const fetchScreenshot = async () => {
-			setLoading(true); // Reset loading state for new URL
-			setError(null); // Reset error state
-			setImageSrc(null); // Reset image source
+			setLoading(true);
+			setError(null);
+			setImageSrc(null);
 
 			try {
-				// Primero revisa la base de datos local para ver si ya existe la imagen
 				const cachedScreenshot = await db.screenshot_cache.get(bookmarkURL);
 				if (cachedScreenshot) {
 					setImageSrc(cachedScreenshot.image_base64);
@@ -42,30 +59,22 @@ export default function SingleScreenshot({ bookmarkURL, bookmarkTitle }: SingleS
 					return;
 				}
 
-				// Si no existe en la base de datos, hacer una solicitud a la API
 				const response = await fetch("/api/screenshoter", {
 					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
+					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({ url: bookmarkURL }),
 				});
 
 				const data = await response.json();
-
 				if (!response.ok) {
 					throw new Error(data.error || "Ocurrió un error al obtener la captura de pantalla.");
 				}
-
 				const base64 = data.data;
-
-				// Guardar la imagen en la base de datos local
 				await db.screenshot_cache.put({
 					url: bookmarkURL,
 					image_base64: base64,
 					created_at: now,
 				});
-
 				setImageSrc(base64);
 			} catch (err: any) {
 				console.error("Ocurrió un error al obtener la captura de pantalla:", err);
@@ -78,26 +87,23 @@ export default function SingleScreenshot({ bookmarkURL, bookmarkTitle }: SingleS
 		fetchScreenshot();
 	}, [bookmarkURL]);
 
-	//
 	if (loading) return <LoadingBookmarkPlaceholder />;
-
 	if (error) return <BookmarkPlaceholder bookmarkURL={bookmarkURL} bookmarkTitle={bookmarkTitle} />;
-
-	if (!imageSrc) return <div className="screenshot-container"></div>;
+	if (!imageSrc) {
+		return <div className="single-screenshot-container placeholder-empty" title="No preview available"></div>;
+	}
 
 	return (
-		<div className="screenshot-container">
-			<img
-				src={imageSrc}
-				alt={`Screenshot of ${bookmarkURL}`}
-				style={{
-					position: "relative",
-					width: "100%",
-					height: "100%",
-					objectFit: "fill",
-					zIndex: 2,
-				}}
-			/>
-		</div>
+		<>
+			<div ref={screenshotContainerRef} className="single-screenshot-container" title={bookmarkTitle}>
+				<div className="screenshot-image-wrapper">
+					<img src={imageSrc} alt={`Screenshot of ${bookmarkTitle}`} className="screenshot-actual-image" />
+				</div>
+
+				<div className="bookmark-info-overlay">
+					<span>{bookmarkTitle}</span>
+				</div>
+			</div>
+		</>
 	);
 }
