@@ -33,6 +33,10 @@
 	border: 1px solid #2a2a2a;
 }
 
+.add-folder-button {
+	margin-left: 0.3rem;
+}
+
 .delete-button {
 	background-color: #ff4d4d;
 	background-image: linear-gradient(to bottom, #ff6666 0%, #cc0000 100%);

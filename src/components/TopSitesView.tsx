@@ -115,6 +115,8 @@ function TopSitesView({ username, isOwner }: ViewManagerProps) {
 					Editar
 				</button>
 
+				<button className="base-button edit-button add-folder-button">Añadir carpeta</button>
+
 				{isEditFolderOpen && selectedFolder && (
 					<EditFolder
 						isOpen={isEditFolderOpen}
