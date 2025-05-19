@@ -1,7 +1,5 @@
 import "../styles/index.css";
-import { ClerkProvider } from "@clerk/clerk-react";
 import TestTurso from "./test-turso";
-import SingleScreenshot from "./SingleScreenshot";
 
 const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
 
