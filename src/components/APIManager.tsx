@@ -1,10 +1,38 @@
 import { useEffect, useState } from "react";
-import { db, type Bookmark } from "../lib/dexie";
+import { useUser } from "@clerk/clerk-react";
+import { createPlaceholderDataDexie } from "@/lib/createPlaceholderDataDexie";
+
+import { db, type Bookmark, type Folder } from "../lib/dexie";
 
 function APIManager() {
-	const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+	const { isSignedIn, user, isLoaded } = useUser();
 
-	const [folders, setFolders] = useState([]);
+	const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+	const [folders, setFolders] = useState<Folder[]>([]);
+
+	// Check if the placeholder data has been created
+	const [hasRun, setHasRun] = useState(false);
+
+	// If the user is a new user, let's create example bookmarks and folders :)
+	useEffect(() => {
+		if (!isLoaded) return;
+
+		const createdAt = user?.createdAt;
+
+		if (!createdAt) return;
+
+		const now = new Date();
+		const diferenciaEnMinutos = Math.abs(now.getTime() - createdAt.getTime()) / 1000 / 60;
+
+		if (user && !hasRun && diferenciaEnMinutos < 3) {
+			createPlaceholderDataDexie(user);
+			// to do: sync to turso
+			// createPlaceholderDataDexie().then(() => {
+			// 	syncTurso();
+			// }
+			setHasRun(true);
+		}
+	}, [user]);
 
 	// Load from local DB
 	useEffect(() => {
@@ -12,49 +40,49 @@ function APIManager() {
 	}, []);
 
 	// Add bookmark locally
-	const addBookmark = async () => {
-		const newBookmark: Bookmark = {
-			id: crypto.randomUUID(),
-			folder_id: 1,
-			url: "https://example.com",
-			title: "Example",
-			created_at: Date.now(),
-			sync_status: "pending",
-		};
-		await db.bookmarks.add(newBookmark);
-		setBookmarks(await db.bookmarks.toArray());
-	};
+	// const addBookmark = async () => {
+	// 	const newBookmark: Bookmark = {
+	// 		id: crypto.randomUUID(),
+	// 		folder_id: 1,
+	// 		url: "https://example.com",
+	// 		title: "Example",
+	// 		created_at: Date.now(),
+	// 		sync_status: "pending",
+	// 	};
+	// 	await db.bookmarks.add(newBookmark);
+	// 	setBookmarks(await db.bookmarks.toArray());
+	// };
 
-	useEffect(() => {
-		const interval = setInterval(async () => {
-			const unsynced = await db.bookmarks.where("syncStatus").equals("pending").toArray();
+	// useEffect(() => {
+	// 	const interval = setInterval(async () => {
+	// 		const unsynced = await db.bookmarks.where("syncStatus").equals("pending").toArray();
 
-			for (const bookmark of unsynced) {
-				try {
-					const res = await fetch("/api/bookmarks", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify(bookmark),
-					});
+	// 		for (const bookmark of unsynced) {
+	// 			try {
+	// 				const res = await fetch("/api/bookmarks", {
+	// 					method: "POST",
+	// 					headers: { "Content-Type": "application/json" },
+	// 					body: JSON.stringify(bookmark),
+	// 				});
 
-					if (res.ok) {
-						await db.bookmarks.update(bookmark.id, { sync_status: "synced" });
-						setBookmarks(await db.bookmarks.toArray());
-					}
-				} catch (err) {
-					console.error("Sync failed", err);
-				}
-			}
-		}, 5000);
+	// 				if (res.ok) {
+	// 					await db.bookmarks.update(bookmark.id, { sync_status: "synced" });
+	// 					setBookmarks(await db.bookmarks.toArray());
+	// 				}
+	// 			} catch (err) {
+	// 				console.error("Sync failed", err);
+	// 			}
+	// 		}
+	// 	}, 5000);
 
-		return () => clearInterval(interval);
-	}, []);
+	// 	return () => clearInterval(interval);
+	// }, []);
 
-	useEffect(() => {
-		fetch("/api/folders")
-			.then((res) => res.json())
-			.then(setFolders);
-	}, []);
+	// useEffect(() => {
+	// 	fetch("/api/folders")
+	// 		.then((res) => res.json())
+	// 		.then(setFolders);
+	// }, []);
 
 	return (
 		<div>
@@ -64,7 +92,7 @@ function APIManager() {
 					<li key={b.id}>{b.url}</li>
 				))}
 			</ul> */}
-			<div>
+			{/* <div>
 				<button onClick={addBookmark}>Add Bookmark</button>
 				<ul>
 					{bookmarks.map((b) => (
@@ -81,7 +109,7 @@ function APIManager() {
 					{f.emoji}
 					{f.name}
 				</li>
-			))}
+			))} */}
 		</div>
 	);
 }
