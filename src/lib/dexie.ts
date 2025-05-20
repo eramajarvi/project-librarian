@@ -9,6 +9,7 @@ export interface Bookmark {
 	created_at: number;
 	updated_at: number;
 	sync_status: "new" | "modified" | "deleted_local" | "synced" | "error";
+	is_deleted?: boolean;
 }
 
 export interface Folder {
