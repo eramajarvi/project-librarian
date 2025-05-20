@@ -46,7 +46,7 @@
 }
 
 .bookmark-table th {
-	background: linear-gradient(to top, #646464 2%, #303030 30%, #646464 90%, #f9fafb 100%);
+	background: linear-gradient(to top, #646464 2%, #303030 30%, #646464 99%, #f9fafb 100%);
 	font-weight: bolder;
 	position: sticky;
 	top: 0;
