@@ -1,0 +1,141 @@
+.bookmarks-container {
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+}
+
+.placeholder-message,
+.loading-message,
+.error-message,
+.empty-message {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	text-align: center;
+	color: #777;
+	font-style: italic;
+	padding: 20px;
+}
+
+.error-message p {
+	color: #d9534f;
+	font-style: normal;
+}
+
+/* --- Styles for Table Option --- */
+table a {
+	text-decoration: none;
+	all: unset;
+	cursor: pointer;
+}
+
+.bookmark-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9em;
+	table-layout: fixed;
+	color: white;
+}
+
+.bookmark-table th,
+.bookmark-table td {
+	padding: 2px 12px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.bookmark-table th {
+	background: linear-gradient(to top, #646464 2%, #303030 30%, #646464 90%, #f9fafb 100%);
+	font-weight: bolder;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+.bookmark-table tr {
+	background-color: rgb(42, 42, 42);
+
+	&:nth-child(even):not(:hover) {
+		background: rgb(32, 32, 32);
+	}
+
+	&:hover {
+		background: rgb(32, 123, 232);
+		outline: 3px solid rgba(0, 128, 255, 0.6);
+		outline-offset: 0px;
+		color: white;
+		font-weight: bolder;
+
+		.action-button {
+			display: block;
+		}
+	}
+}
+
+.favicon-img {
+	width: 24px;
+	height: 24px;
+	vertical-align: middle;
+}
+
+.th-favicon,
+.td-favicon {
+	width: 40px;
+	text-align: center;
+}
+
+.th-name,
+.td-name {
+	width: 25%;
+}
+
+.th-url,
+.td-url {
+	width: 55%;
+}
+
+.th-actions,
+.td-actions {
+	width: 100px;
+	text-align: center;
+	justify-content: center;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.td-name a,
+.td-url a {
+	text-decoration: none;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.td-name a:hover,
+.td-url a:hover {
+	text-decoration: underline;
+}
+
+.td-actions .action-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+
+	padding: 4px;
+	margin: 0 4px;
+	font-size: 1.1em;
+	opacity: 0.7;
+	transition: opacity 0.2s;
+}
+
+.action-button {
+	display: none;
+}
+
+.td-actions .action-button:hover {
+	opacity: 1;
+}
