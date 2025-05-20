@@ -1,0 +1,46 @@
+---
+import "../styles/index.css";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/astro/components";
+
+import Emoji1 from "@/assets/landing-emojis/emoji1.astro";
+import Emoji2 from "@/assets/landing-emojis/emoji2.astro";
+import Emoji3 from "@/assets/landing-emojis/emoji3.astro";
+import Emoji4 from "@/assets/landing-emojis/emoji4.astro";
+import Emoji5 from "@/assets/landing-emojis/emoji5.astro";
+import Emoji6 from "@/assets/landing-emojis/emoji6.astro";
+import Emoji7 from "@/assets/landing-emojis/emoji7.astro";
+---
+
+<div class="landing-container">
+	<div class="landing-subcontainer-one landing-containers-texture shadow-xl">
+		<div class="landing-subcontainer-two"></div>
+		<Emoji1 class="landing-emoji emoji1" />
+		<Emoji2 class="landing-emoji emoji2" />
+		<Emoji3 class="landing-emoji emoji3" />
+		<Emoji4 class="landing-emoji emoji4" />
+		<Emoji5 class="landing-emoji emoji5" />
+		<Emoji6 class="landing-emoji emoji6" />
+		<Emoji7 class="landing-emoji emoji7" />
+
+		<div class="landing-subcontainer-three landing-containers-texture shadow-xl">
+			<div class="landing-CTA shadow-md">
+				<div>
+					<div>
+						<h1 class="landing-title">The Librarian</h1>
+						<p class="landing-text">Una biblioteca para tus marcadores</p>
+					</div>
+
+					<SignedIn>
+						<p class="base-button edit-button">
+							<a href="/[username]">Ir a mi perfil</a>
+						</p>
+					</SignedIn>
+
+					<SignedOut>
+						<SignInButton mode="modal" class="base-button edit-button">Unirme ahora</SignInButton>
+					</SignedOut>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

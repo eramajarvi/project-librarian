@@ -126,6 +126,7 @@ function TopSitesView({}: ViewManagerProps) {
 					setCurrentFolderId(null);
 					setSelectedFolder(null);
 				}
+
 				setInitialFolderLoaded(true);
 			} else if (isLoaded && !user) {
 				setFolders([]);

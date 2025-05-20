@@ -1,7 +1,7 @@
 import { db, type Bookmark, type Folder } from "./dexie";
 import type { UserResource } from "@clerk/types";
 
-export async function createPlaceholderDataDexie(user: UserResource) {
+export function createPlaceholderDataDexie(user: UserResource) {
 	const nowHolder = Date.now();
 	const now = new Date(nowHolder).toISOString();
 
@@ -295,9 +295,9 @@ export async function createPlaceholderDataDexie(user: UserResource) {
 		},
 	];
 
-	await db.folders.bulkPut(placeholderFolders);
-	await db.bookmarks.bulkPut(placeholderBookmarksGeneral);
-	await db.bookmarks.bulkPut(placeholderBookmarksTools);
-	await db.bookmarks.bulkPut(placeholderBookmarksComponents);
-	await db.bookmarks.bulkPut(placeholderBookmarksPortfolios);
+	db.folders.bulkPut(placeholderFolders);
+	db.bookmarks.bulkPut(placeholderBookmarksGeneral);
+	db.bookmarks.bulkPut(placeholderBookmarksTools);
+	db.bookmarks.bulkPut(placeholderBookmarksComponents);
+	db.bookmarks.bulkPut(placeholderBookmarksPortfolios);
 }

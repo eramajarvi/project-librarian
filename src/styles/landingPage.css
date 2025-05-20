@@ -1,0 +1,143 @@
+.landing-title {
+	font-size: 2em;
+	color: black;
+	margin: 0;
+}
+
+.landing-text {
+	color: black;
+	margin: 0;
+	padding-bottom: 1rem;
+}
+
+.landing-containers-texture {
+	background-image: url("../assets/noisy-grid.png");
+	background-repeat: round;
+	filter: brightness(0.9) contrast(1.2);
+}
+
+.landing-container {
+	display: block;
+	margin: 5% auto;
+	min-width: 300px;
+	max-width: 60%;
+	height: auto;
+	aspect-ratio: 1.5 / 1;
+	transform: rotate(1deg);
+}
+
+.landing-subcontainer-one {
+	width: 100%;
+	height: 100%;
+	border-radius: var(--radius-4xl);
+	background-color: #ffda55;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.landing-subcontainer-two {
+	width: 97%;
+	height: 96%;
+	border-radius: calc(var(--radius-4xl) - 10px);
+	border: rgba(0, 0, 0, 0.596) dashed 3px;
+	background-color: #c9ae4100;
+	position: relative;
+	z-index: 1;
+	align-items: center;
+	justify-content: center;
+}
+
+.landing-subcontainer-three {
+	width: 100%;
+	height: 48%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	/* border-radius: 0 0 calc(var(--radius-4xl) - 10px) calc(var(--radius-4xl) - 10px); */
+	border-radius: calc(var(--radius-4xl) - 10px) calc(var(--radius-4xl) - 10px) 0 0;
+	transform: rotate(180deg);
+	background-color: #ffda55;
+	border-top: none;
+	outline: rgba(0, 0, 0, 0.5) dashed 3px;
+	outline-offset: -13px;
+	z-index: 3;
+}
+
+.landing-CTA {
+	transform: rotate(180deg);
+	border-radius: var(--radius-4xl);
+	outline: rgba(0, 0, 0, 0.5) dashed 3px;
+	outline-offset: -8px;
+	background-color: #ffda55;
+	text-align: center;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	padding: 0.8rem 1rem;
+	width: 20rem;
+	position: absolute;
+	bottom: 2rem;
+	right: 2rem;
+
+	filter: brightness(1);
+}
+
+.landing-emoji {
+	position: absolute; /* Position the image */
+	/* top: 0; */
+	/* left: 0; */
+	width: 30%; /* Make it fill the container */
+	height: 80%; /* Make it fill the container */
+	object-fit: cover; /* Ensure the image scales properly */
+	z-index: 2; /* Place this between .clientes-subcontainer-two and .clientes-subcontainer-three */
+	transition: transform 0.3s ease;
+}
+
+.landing-emoji:hover {
+	transform: translateY(-35px) rotate(-2deg);
+}
+
+.emoji1 {
+	margin-left: -25rem;
+	margin-top: -25rem;
+	rotate: 12deg;
+}
+
+.emoji2 {
+	margin-left: -15rem;
+	margin-top: -10rem;
+	rotate: -12deg;
+}
+
+.emoji3 {
+	margin-left: 35rem;
+	margin-top: -5rem;
+	rotate: -5deg;
+}
+
+.emoji4 {
+	margin-left: 20rem;
+	margin-top: -20rem;
+	rotate: 30deg;
+}
+
+.emoji5 {
+	margin-left: -35rem;
+	margin-top: 0;
+	rotate: 10deg;
+}
+
+.emoji6 {
+	margin-left: -5rem;
+	margin-top: -20rem;
+	rotate: -55deg;
+}
+
+.emoji7 {
+	margin-left: 15rem;
+	margin-top: -5rem;
+	rotate: 5deg;
+}

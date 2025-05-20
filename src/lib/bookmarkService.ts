@@ -63,7 +63,9 @@ export async function addBookmarkToFolder(
  */
 export async function getBookmarksForFolder(folderId: string, userId: string): Promise<Bookmark[]> {
 	if (!folderId || !userId) return [];
+	console.log("BookmarkService: Getting bookmarks for folder:", folderId, "user:", userId);
 	return db.bookmarks.where({ folder_id: folderId, user_id: userId }).sortBy("created_at");
+	// return db.bookmarks.where({ folder_id: folderId }).sortBy("created_at");
 }
 export type { Bookmark };
 
