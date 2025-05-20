@@ -13,9 +13,6 @@ export interface NewFolderDetails {
  * @throws Error if the database operation fails.
  */
 export async function addNewFolder(details: NewFolderDetails, userId: string): Promise<Folder> {
-	const nowHolder = Date.now();
-	const now = new Date(nowHolder).toISOString();
-
 	if (!userId) {
 		throw new Error("El ID del usuario (de Clerk) es obligatorio para crear una carpeta.");
 	}
@@ -28,9 +25,10 @@ export async function addNewFolder(details: NewFolderDetails, userId: string): P
 		folder_name: details.folder_name.trim(),
 		folder_emoji: details.folder_emoji || "📂", // Default emoji if none provided
 		user_id: userId, // Store the Clerk user ID
-		created_at: now,
-		updated_at: now,
-		sync_status: "pending",
+		created_at: Date.now(),
+		updated_at: Date.now(),
+		sync_status: "new",
+		is_deleted: false,
 	};
 
 	try {
@@ -66,7 +64,7 @@ export async function updateFolder(
 		if (!updatedFolder) {
 			throw new Error(`Folder with ID ${folderId} not found after update attempt.`);
 		}
-		console.log("Folder updated successfully in Dexie:", updatedFolder);
+
 		return updatedFolder;
 	} catch (error) {
 		console.error("Failed to update folder in Dexie:", error);
@@ -90,7 +88,6 @@ export async function deleteFolder(folderId: string): Promise<void> {
 	}
 }
 
-// You can also add functions here to fetch folders, etc.
 /**
  * Fetches all folders for a given user, sorted by creation date.
  * @param userId - The ID of the user.

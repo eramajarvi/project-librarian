@@ -18,9 +18,6 @@ export async function addBookmarkToFolder(
 	folderId: string,
 	userId: string
 ): Promise<Bookmark> {
-	const nowHolder = Date.now();
-	const now = new Date(nowHolder).toISOString();
-
 	if (!folderId) {
 		throw new Error("El folderId es obligatorio para añadir un marcador");
 	}
@@ -37,9 +34,9 @@ export async function addBookmarkToFolder(
 		title: details.name.trim(),
 		folder_id: folderId,
 		user_id: userId,
-		created_at: now,
-		updated_at: now,
-		sync_status: "pending",
+		created_at: Date.now(),
+		updated_at: Date.now(),
+		sync_status: "new",
 	};
 
 	try {
