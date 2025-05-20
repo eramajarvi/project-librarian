@@ -106,7 +106,14 @@ const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolde
 			<div className="carousel-track">
 				{bookmarks.map((bookmark) => (
 					<div key={bookmark.bookmark_id} className="carousel-item">
-						<SingleScreenshot bookmarkURL={bookmark.url} bookmarkTitle={bookmark.title} />
+						<a
+							style={{ textDecoration: "none" }}
+							href={bookmark.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							title={bookmark.title}>
+							<SingleScreenshot bookmarkURL={bookmark.url} bookmarkTitle={bookmark.title} />
+						</a>
 					</div>
 				))}
 			</div>
