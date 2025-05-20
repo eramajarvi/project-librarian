@@ -1,5 +1,6 @@
 import "../styles/index.css";
 import "../styles/folderList.css";
+import "../styles/buttons.css";
 import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react"; // For getting the current user
 import { getFoldersForUser, type Folder } from "../lib/folderService"; // Your service function and type
@@ -117,18 +118,16 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 
 	return (
 		<div className="folder-list-container">
-			<div className="folder-list-content">{renderContent()}</div>
-
-			{clerkIsLoaded && user && (
-				<div className="folder-list-footer">
-					<button className="add-folder-button base-button" onClick={onAddFolderClick}>
-						<span role="img" aria-label="add folder icon" style={{ marginRight: "8px" }}>
-							➕
-						</span>
-						Añadir Colección
-					</button>
-				</div>
-			)}
+			<div className="folder-list-content">
+				{renderContent()}
+				{clerkIsLoaded && user && (
+					<div className="folder-list-footer">
+						<button className="add-folder-button edit-button" onClick={onAddFolderClick}>
+							+
+						</button>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

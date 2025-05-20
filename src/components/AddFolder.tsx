@@ -102,7 +102,7 @@ const AddFolder: React.FC<AddFolderProps> = ({
 						<input
 							type="text"
 							className="folder-emoji-input textfield"
-							placeholder="📂"
+							placeholder=""
 							maxLength={2}
 							value={emojiValue}
 							onChange={(e) => setEmojiValue(e.target.value)}
