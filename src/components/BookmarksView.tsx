@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../styles/index.css";
 
 import FolderList from "./FolderList";
+import RightPaneTop from "./RightPaneTop";
+import RightPaneBottom from "./RightPaneBottom";
 
 interface BookmarksViewProps {
 	username: string;
@@ -33,15 +35,12 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 					/>
 				</aside>
 				<main className="right-pane">
-					{" "}
-					{/* Changed div to main for semantics */}
-					<h2>Detalles del Marcador</h2> {/* Added h2 for clarity */}
-					{selectedFolderId ? (
-						<p>Marcadores para la carpeta: {selectedFolderId}</p>
-					) : (
-						<p>Por favor, selecciona una colección de la izquierda.</p>
-					)}
-					{/* Bookmark details for the selectedFolderId will go here */}
+					<div className="right-pane-top">
+						<RightPaneTop selectedFolderId={selectedFolderId} />
+					</div>
+					<div className="right-pane-bottom">
+						<RightPaneBottom selectedFolderId={selectedFolderId} />
+					</div>
 				</main>
 			</div>
 		</div>
