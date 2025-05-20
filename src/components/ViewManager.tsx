@@ -1,6 +1,8 @@
 import { useStore } from "@nanostores/react";
 import { activeView } from "../stores/activeViewStore";
+import APIManager from "./APIManager";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { dark } from "@clerk/themes";
 import { useUser } from "@clerk/clerk-react";
 import type { UserResource } from "@clerk/types";
 
@@ -40,7 +42,8 @@ export default function ViewManager({ username, isOwner, user }: ViewManagerProp
 	};
 
 	return (
-		<ClerkProvider publishableKey={publishableKey}>
+		<ClerkProvider publishableKey={publishableKey} appearance={{ baseTheme: dark }}>
+			<APIManager />
 			<main>{renderView()}</main>
 		</ClerkProvider>
 	);
