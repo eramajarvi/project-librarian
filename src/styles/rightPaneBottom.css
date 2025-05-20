@@ -81,7 +81,7 @@
 
 .th-favicon,
 .td-favicon {
-	width: 40px;
+	width: 24px;
 	text-align: center;
 }
 
@@ -97,11 +97,14 @@
 
 .th-actions,
 .td-actions {
-	display: flex;
 	align-items: center;
 	justify-content: center;
 	vertical-align: middle;
 	height: 1.5rem;
+}
+
+.td-actions {
+	display: flex;
 }
 
 .td-name a,
@@ -139,4 +142,5 @@
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
 	transition: all 0.1s ease-in-out;
+	margin-left: 4px;
 }

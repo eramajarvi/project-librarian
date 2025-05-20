@@ -87,6 +87,7 @@
 	font-size: 0.9em;
 	width: 2.5rem;
 	color: white;
+	cursor: pointer;
 }
 
 .add-folder-button:focus {
