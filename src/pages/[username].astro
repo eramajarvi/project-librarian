@@ -1,8 +1,8 @@
 ---
 import { clerkClient } from "@clerk/astro/server";
+import type { UserResource } from "@clerk/types";
 import ChromeLayout from "../layouts/ChomeLayout.astro";
-import Curve from "../components/curve.astro";
-import ViewManager from "../components/ViewManager.tsx"; // Import the ViewManager
+import ViewManager from "../components/ViewManager.tsx";
 
 const authResult = Astro.locals.auth();
 const backendClerkClient = clerkClient(Astro);
@@ -93,12 +93,9 @@ try {
 }
 
 // Prepare props for ViewManager. Only pass necessary and serializable data.
-// Avoid passing the entire `pageOwnerData` object if it's very large and not all needed.
 const viewManagerProps = {
 	username: displayDataForUser,
 	isOwner: isOwner,
-	// Example: If you need pageOwner's ID in client components:
-	// pageOwnerId: pageOwnerData?.id
 };
 ---
 
