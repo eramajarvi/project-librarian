@@ -13,21 +13,21 @@ import tailwindcss from "@tailwindcss/vite";
 import vercel from "@astrojs/vercel";
 
 export default defineConfig({
-    integrations: [
-        clerk({
-            localization: esMX,
-            appearance: {
-                baseTheme: dark,
-            },
-        }),
-        react(),
-    ],
+	integrations: [
+		clerk({
+			localization: esMX,
+			appearance: {
+				baseTheme: dark,
+			},
+		}),
+		react(),
+	],
 
-    adapter: vercel(),
+	adapter: vercel(),
 
-    output: "server",
+	output: "server",
 
-    vite: {
-        plugins: [tailwindcss()],
-    },
+	vite: {
+		plugins: [tailwindcss()],
+	},
 });
