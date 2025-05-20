@@ -4,6 +4,8 @@ import { createPlaceholderDataDexie } from "@/lib/createPlaceholderDataDexie";
 
 import { db, type Bookmark, type Folder } from "../lib/dexie";
 
+import { synchronize } from "@/lib/syncService";
+
 function APIManager() {
 	const { isSignedIn, user, isLoaded } = useUser();
 
@@ -23,97 +25,46 @@ function APIManager() {
 		if (!createdAt) return;
 
 		const now = new Date();
-		const diferenciaEnMinutos = Math.abs(now.getTime() - createdAt.getTime()) / 1000 / 60;
-		console.log("Diferencia en minutos:", diferenciaEnMinutos);
+		const diferenciaEnsegundos = Math.abs(now.getTime() - createdAt.getTime()) / 1000;
+		console.log("Diferencia en minutos:", diferenciaEnsegundos);
 
-		if (user && !hasRun && diferenciaEnMinutos < 3) {
+		if (user && !hasRun && diferenciaEnsegundos < 20) {
 			createPlaceholderDataDexie(user);
-			// to do: sync to turso
-			// createPlaceholderDataDexie().then(() => {
-			// 	syncTurso();
-			// }
 			setHasRun(true);
 		}
 	}, [user]);
 
 	// Load from local DB
+	// useEffect(() => {
+	// 	db.bookmarks.toArray().then(setBookmarks);
+	// }, []);
+	// This useEffect handles the general synchronization
 	useEffect(() => {
-		db.bookmarks.toArray().then(setBookmarks);
-	}, []);
+		if (isLoaded && user) {
+			// Only run if Clerk has loaded and a user is signed in
+			console.log("APIManager: User is authenticated. Triggering synchronization.");
+			synchronize()
+				.then(() => {
+					console.log("APIManager: Synchronization attempt completed.");
+				})
+				.catch((err) => {
+					console.error("APIManager: Synchronization attempt failed:", err);
+				});
+		} else if (isLoaded && !user) {
+			console.log("APIManager: User is not signed in. Skipping synchronization.");
+			// Optionally, clear local Dexie data if a user logs out,
+			// or ensure data is user-specific so it doesn't leak.
+		}
+	}, [isLoaded, user]); // Dependencies: re-run if Clerk loads or user changes (login/logout)
 
-	// Add bookmark locally
-	// const addBookmark = async () => {
-	// 	const newBookmark: Bookmark = {
-	// 		id: crypto.randomUUID(),
-	// 		folder_id: 1,
-	// 		url: "https://example.com",
-	// 		title: "Example",
-	// 		created_at: Date.now(),
-	// 		sync_status: "pending",
-	// 	};
-	// 	await db.bookmarks.add(newBookmark);
-	// 	setBookmarks(await db.bookmarks.toArray());
-	// };
+	useEffect(() => {
+		if (isLoaded && user) {
+			console.log("App loaded and user authenticated, triggering initial sync.");
+			synchronize().catch((err) => console.error("Initial sync failed on app load:", err));
+		}
+	}, [isLoaded, user]);
 
-	// useEffect(() => {
-	// 	const interval = setInterval(async () => {
-	// 		const unsynced = await db.bookmarks.where("syncStatus").equals("pending").toArray();
-
-	// 		for (const bookmark of unsynced) {
-	// 			try {
-	// 				const res = await fetch("/api/bookmarks", {
-	// 					method: "POST",
-	// 					headers: { "Content-Type": "application/json" },
-	// 					body: JSON.stringify(bookmark),
-	// 				});
-
-	// 				if (res.ok) {
-	// 					await db.bookmarks.update(bookmark.id, { sync_status: "synced" });
-	// 					setBookmarks(await db.bookmarks.toArray());
-	// 				}
-	// 			} catch (err) {
-	// 				console.error("Sync failed", err);
-	// 			}
-	// 		}
-	// 	}, 5000);
-
-	// 	return () => clearInterval(interval);
-	// }, []);
-
-	// useEffect(() => {
-	// 	fetch("/api/folders")
-	// 		.then((res) => res.json())
-	// 		.then(setFolders);
-	// }, []);
-
-	return (
-		<div>
-			<h1>Bookmarks</h1>
-			{/* <ul>
-				{bookmarks.map((b: { id: number; url: string }) => (
-					<li key={b.id}>{b.url}</li>
-				))}
-			</ul> */}
-			{/* <div>
-				<button onClick={addBookmark}>Add Bookmark</button>
-				<ul>
-					{bookmarks.map((b) => (
-						<li key={b.id}>
-							{b.title} - {b.url} ({b.sync_status})
-						</li>
-					))}
-				</ul>
-			</div>
-
-			<h1>Folders</h1>
-			{folders.map((f: { id: number; name: string; emoji: string }) => (
-				<li key={f.id}>
-					{f.emoji}
-					{f.name}
-				</li>
-			))} */}
-		</div>
-	);
+	return <div></div>;
 }
 
 export default APIManager;
