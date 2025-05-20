@@ -7,25 +7,14 @@ import "../styles/rightPaneTop.css"; // Styles will be updated for carousel
 
 interface RightPaneTopContentProps {
 	selectedFolderId: string | null;
+	refreshKey?: number;
 }
 
-const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolderId }) => {
+const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolderId, refreshKey }) => {
 	const { user, isLoaded: clerkIsLoaded } = useUser();
 	const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [activeIndex, setActiveIndex] = useState(0);
-
-	const carouselTrackRef = useRef<HTMLDivElement>(null);
-	// Store refs to each carousel item to observe them
-	const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-	const MAX_CAROUSEL_ITEMS = 25;
-
-	useEffect(() => {
-		// Initialize or resize itemRefs array when bookmarks change
-		itemRefs.current = itemRefs.current.slice(0, bookmarks.length);
-	}, [bookmarks.length]);
 
 	useEffect(() => {
 		const fetchBookmarks = async () => {
@@ -35,6 +24,7 @@ const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolde
 				setIsLoading(true);
 				setError(null);
 				try {
+					console.log(`RightPaneTop: Buscando marcadores para la carpeta ${selectedFolderId}, key: ${refreshKey}`);
 					const folderBookmarks = await getBookmarksForFolder(selectedFolderId, user.id);
 
 					const sortedBookmarks = folderBookmarks.sort((a, b) => {
@@ -43,11 +33,10 @@ const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolde
 						return bCreatedAt - aCreatedAt;
 					});
 
-					setBookmarks(sortedBookmarks.slice(0, MAX_CAROUSEL_ITEMS));
-					setActiveIndex(0);
+					setBookmarks(sortedBookmarks);
 				} catch (err) {
-					console.error("Ocurrio", err);
-					setError(err instanceof Error ? err.message : "An unknown error occurred.");
+					console.error("Ocurrió un error al obtener los marcadores:", err);
+					setError(err instanceof Error ? err.message : "Un error desconocido ocurrió.");
 					setBookmarks([]);
 				} finally {
 					setIsLoading(false);
@@ -60,27 +49,12 @@ const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolde
 		};
 
 		fetchBookmarks();
-	}, [selectedFolderId, user, clerkIsLoaded]);
+	}, [selectedFolderId, user, clerkIsLoaded, refreshKey]);
 
 	if (!selectedFolderId) {
 		return (
 			<div className="top-pane-carousel-container placeholder-message">
 				<p>Selecciona una colección.</p>
-			</div>
-		);
-	}
-
-	if (isLoading) {
-		return (
-			<div className="top-pane-carousel-container loading-carousel">
-				{/* Simple loading text, or you can create skeleton loaders for carousel items */}
-				<p>Cargando vistas previas...</p>
-				{/* Example of a few shimmer items for loading state */}
-				{/* <div className="carousel-track">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                        <div key={`loading-${index}`} className="carousel-item loading-shimmer-item"></div>
-                    ))}
-                </div> */}
 			</div>
 		);
 	}
@@ -96,7 +70,9 @@ const RightPaneTopContent: React.FC<RightPaneTopContentProps> = ({ selectedFolde
 	if (bookmarks.length === 0) {
 		return (
 			<div className="top-pane-carousel-container empty-message">
-				<p>No hay marcadores en esta colección para mostrar en la vista previa.</p>
+				<p>
+					No hay marcadores en esta colección para mostrar en la vista previa. Añade uno haciendo clic en el botón +
+				</p>
 			</div>
 		);
 	}

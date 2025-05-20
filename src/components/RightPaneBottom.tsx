@@ -72,7 +72,20 @@ const RightPaneBottom: React.FC<RightPaneBottomProps> = ({
 		}
 
 		if (isLoading) {
-			return <div className="bookmarks-container loading-message"></div>;
+			return (
+				<table className="bookmark-table is-loading">
+					<thead>...</thead>
+					<tbody>
+						{Array.from({ length: 3 }).map((_, i) => (
+							<tr key={i}>
+								<td colSpan={4}>
+									<div className="shimmer-row"></div>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			);
 		}
 
 		if (error) {
@@ -83,65 +96,70 @@ const RightPaneBottom: React.FC<RightPaneBottomProps> = ({
 			);
 		}
 
-		if (bookmarks.length === 0) {
-			return (
-				<div className="bookmarks-container empty-message">
-					<p>Esta colección no tiene marcadores todavía.</p>
-				</div>
-			);
-		}
-
-		if (bookmarks.length > 0) {
-			return (
-				<table className="bookmark-table">
-					<thead>
-						<tr>
-							<th className="th-favicon"></th>
-							<th className="th-name">Marcador</th>
-							<th className="th-url">URL</th>
-							<th className="th-actions">​</th>
-						</tr>
-					</thead>
-					<tbody>
-						{bookmarks.map((bookmark) => (
-							<tr key={bookmark.bookmark_id} className="bookmark-table-row">
-								<td className="td-favicon">
-									<span className="favicon-placeholder">
-										<img src="/assets/SiteIcon.png" alt="Favicon" className="favicon-img" />
-									</span>
-								</td>
-								<td className="td-name">
-									<a href={bookmark.url} target="_blank" rel="noopener noreferrer" title={bookmark.title}>
-										{bookmark.title.length > 30 ? `${bookmark.title.substring(0, 27)}...` : bookmark.title}
-									</a>
-								</td>
-								<td className="td-url">
-									<a href={bookmark.url} target="_blank" rel="noopener noreferrer" title={bookmark.url}>
-										{bookmark.url.length > 60 ? `${bookmark.url.substring(0, 57)}...` : bookmark.url}
-									</a>
-								</td>
-								<td className="td-actions">
-									<button
-										className="action-button edit-button"
-										title="Editar marcador"
-										onClick={() => handleEditBookmark(bookmark)}>
-										EDITAR
-									</button>
-									<button
-										className="action-button delete-button"
-										title="Eliminar marcador"
-										onClick={() => handleDeleteBookmark(bookmark.bookmark_id, bookmark.title)}>
-										ELIMINAR
-									</button>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			);
-		}
-
-		return null;
+		return (
+			<table className="bookmark-table">
+				<thead>
+					<tr>
+						<th className="th-favicon"></th>
+						<th className="th-name">Marcador</th>
+						<th className="th-url">URL</th>
+						<th className="th-actions">​</th>
+					</tr>
+				</thead>
+				<tbody>
+					{bookmarks.length === 0 && selectedFolderId && !isLoading && !error
+						? Array.from({ length: 6 }).map((_, index) => (
+								<tr key={`empty-row-${index}`} className="bookmark-table-row empty-placeholder-row">
+									<td className="td-favicon">
+										<span className="favicon-placeholder"> </span>
+									</td>
+									<td className="td-name">
+										<span className="text-placeholder"> </span>
+									</td>
+									<td className="td-url">
+										<span className="text-placeholder"> </span>
+									</td>
+									<td className="td-actions">
+										<span className="action-placeholder"> </span>
+									</td>
+								</tr>
+						  ))
+						: bookmarks.map((bookmark) => (
+								<tr key={bookmark.bookmark_id} className="bookmark-table-row">
+									<td className="td-favicon">
+										<span className="favicon-placeholder">
+											<img src="/assets/SiteIcon.png" alt="Favicon" className="favicon-img" />
+										</span>
+									</td>
+									<td className="td-name">
+										<a href={bookmark.url} target="_blank" rel="noopener noreferrer" title={bookmark.title}>
+											{bookmark.title.length > 30 ? `${bookmark.title.substring(0, 27)}...` : bookmark.title}
+										</a>
+									</td>
+									<td className="td-url">
+										<a href={bookmark.url} target="_blank" rel="noopener noreferrer" title={bookmark.url}>
+											{bookmark.url.length > 60 ? `${bookmark.url.substring(0, 57)}...` : bookmark.url}
+										</a>
+									</td>
+									<td className="td-actions">
+										<button
+											className="action-button edit-button"
+											title="Editar marcador"
+											onClick={() => handleEditBookmark(bookmark)}>
+											EDITAR
+										</button>
+										<button
+											className="action-button delete-button"
+											title="Eliminar marcador"
+											onClick={() => handleDeleteBookmark(bookmark.bookmark_id, bookmark.title)}>
+											ELIMINAR
+										</button>
+									</td>
+								</tr>
+						  ))}
+				</tbody>
+			</table>
+		);
 	};
 
 	return (

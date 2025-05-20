@@ -152,7 +152,7 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 				</aside>
 				<main className="right-pane">
 					<div className="right-pane-top">
-						<RightPaneTop selectedFolderId={selectedFolderId} />
+						<RightPaneTop selectedFolderId={selectedFolderId} refreshKey={refreshBookmarkListKey} />
 					</div>
 					<div className="right-pane-bottom">
 						<RightPaneBottom
