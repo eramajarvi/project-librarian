@@ -31,7 +31,6 @@
 
 	scroll-snap-type: x mandatory;
 	-webkit-overflow-scrolling: touch;
-	/* border: 2px solid aqua; */
 }
 
 .carousel-item {

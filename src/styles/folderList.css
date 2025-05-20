@@ -1,42 +1,42 @@
 .folder-list-scrollable-area {
 	list-style: none;
 	padding: 0;
-	margin: 0;
+	margin-top: 0;
+	margin-bottom: 2.5rem;
 }
 
 .folder-list-item {
 	display: flex;
 	align-items: center;
-	padding: 2px 12px;
+	padding: 0px 12px;
 	cursor: pointer;
 	border-radius: 0px;
-	margin-bottom: 4px; /* Spacing between items */
+	margin-bottom: 2px;
 	transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-	border: 1px solid transparent; /* For consistent sizing with selected state */
+	border: 1px solid transparent;
 }
 
 .folder-list-item:hover {
 	background: linear-gradient(to top, #2c8dfb, #83bffa);
-	/* color: white; */
 }
 
 .folder-list-item:focus {
-	outline: 2px solid #3b82f6; /* Focus ring for accessibility */
+	outline: 2px solid #3b82f6;
 	outline-offset: 1px;
 }
 
 .folder-list-item.selected {
 	background: linear-gradient(to top, #2c8dfb, #83bffa);
-	color: #ffffff; /* Darker text color for selected item */
+	color: #ffffff;
 	font-weight: 500;
 	border-color: #1a76df;
 }
 
 .folder-emoji {
 	margin-right: 10px;
-	font-size: 1.1em; /* Make emoji slightly larger */
+	font-size: 1.1em;
 	display: inline-block;
-	width: 20px; /* Ensure consistent spacing for emoji */
+	width: 20px;
 	text-align: center;
 }
 
@@ -44,7 +44,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	flex-grow: 1; /* Allow name to take available space */
+	flex-grow: 1;
 }
 
 .folder-list-loading,
@@ -59,41 +59,34 @@
 .folder-list-container {
 	display: flex;
 	flex-direction: column;
-	height: 100%;
+	height: auto;
 	overflow: hidden;
 }
 
 .folder-list-content {
-	flex-grow: 1;
+	flex: 1 1 auto;
 	overflow-y: auto;
-	padding-right: 4px;
+	display: flex;
+	flex-direction: column;
 }
 
 .folder-list-footer {
-	padding: 12px 10px; /* Padding around the button */
-	border-top: 1px solid #e0e4e8; /* Separator line */
-	background-color: #f8f9fa; /* Slight background for the footer */
-	flex-shrink: 0; /* Prevent footer from shrinking */
+	display: flex;
+	justify-content: flex-end;
+	position: absolute;
+	bottom: 0;
+	margin-top: 0;
+	padding: 12px 10px;
+	flex-shrink: 0;
+	z-index: 1;
 }
 
 .add-folder-button {
-	width: 100%;
-	padding: 10px 15px;
+	font-size: 1em;
+	border-radius: 9999px;
 	font-size: 0.9em;
-	font-weight: 500;
-	background-color: #4a90e2; /* Example button color */
+	width: 2.5rem;
 	color: white;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: background-color 0.2s ease;
-}
-
-.add-folder-button:hover {
-	background-color: #357abd; /* Darker on hover */
 }
 
 .add-folder-button:focus {

@@ -21,7 +21,6 @@
 	height: 85%;
 	margin: 0.5rem 2rem;
 	padding: 0;
-	margin-top: 1.5rem;
 	border-radius: 16px;
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 }
@@ -44,7 +43,7 @@
 	justify-content: center;
 	align-items: top;
 
-	padding: 20px 0px;
+	padding: 10px 0px;
 }
 
 .left-pane-header {
@@ -54,7 +53,6 @@
 
 	p {
 		font-size: 1em;
-		/* color: #f5f5f5; */
 		font-weight: bolder;
 		text-transform: uppercase;
 		text-align: center;
