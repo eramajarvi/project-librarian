@@ -8,9 +8,15 @@ import RightPaneBottom from "./RightPaneBottom";
 
 import AddFolder, { type NewFolderData } from "./AddFolder";
 import AddBookmark, { type NewBookmarkData } from "./AddBookmark";
+import EditBookmark, { type UpdatedBookmarkData } from "./EditBookmark";
 
 import { addNewFolder as serviceAddNewFolder, type Folder } from "../lib/folderService";
-import { addBookmarkToFolder as serviceAddBookmarkToFolder, type Bookmark } from "../lib/bookmarkService";
+import {
+	addBookmarkToFolder as serviceAddBookmarkToFolder,
+	updateBookmark as serviceUpdateBookmark,
+	deleteBookmark as serviceDeleteBookmark,
+	type Bookmark,
+} from "../lib/bookmarkService";
 
 interface BookmarksViewProps {
 	username: string;
@@ -23,6 +29,9 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 	const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
 	const [isAddFolderModalOpen, setIsAddFolderModalOpen] = useState(false);
 	const [isAddBookmarkModalOpen, setIsAddBookmarkModalOpen] = useState(false);
+	const [isEditBookmarkModalOpen, setIsEditBookmarkModalOpen] = useState(false);
+	const [bookmarkToEdit, setBookmarkToEdit] = useState<Bookmark | null>(null);
+
 	const [refreshFolderListKey, setRefreshFolderListKey] = useState(0);
 	const [refreshBookmarkListKey, setRefreshBookmarkListKey] = useState(0);
 
@@ -91,6 +100,41 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 		}
 	};
 
+	// --- EditBookmark Modal Handlers ---
+	const handleOpenEditBookmarkModal = (bookmark: Bookmark) => {
+		setBookmarkToEdit(bookmark);
+		setIsEditBookmarkModalOpen(true);
+	};
+	const handleCloseEditBookmarkModal = () => {
+		setIsEditBookmarkModalOpen(false);
+		setBookmarkToEdit(null);
+	};
+	const handleAcceptEditBookmark = async (bookmarkId: string, updatedData: UpdatedBookmarkData) => {
+		if (!user) return;
+		try {
+			const updatedBookmark = await serviceUpdateBookmark(bookmarkId, updatedData);
+			console.log("Nuevo marcador actualizado:", updatedBookmark);
+			handleCloseEditBookmarkModal();
+			setRefreshBookmarkListKey((prevKey) => prevKey + 1);
+		} catch (error) {
+			console.error("Error al actualizar el marcador:", error);
+			handleCloseEditBookmarkModal();
+		}
+	};
+
+	// --- Delete Bookmark Handler ---
+	const handleDeleteBookmark = async (bookmarkId: string, bookmarkName: string) => {
+		if (!user) return;
+		if (window.confirm(`¿Estás seguro de que quieres eliminar el marcador "${bookmarkName}"?`)) {
+			try {
+				await serviceDeleteBookmark(bookmarkId);
+				setRefreshBookmarkListKey((prevKey) => prevKey + 1);
+			} catch (error) {
+				console.error("Error al eliminar el marcador:", error);
+			}
+		}
+	};
+
 	return (
 		<div className="page-layout-base">
 			<div className="two-pane-layout">
@@ -115,6 +159,9 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 							key={`bookmarks-${selectedFolderId}-${refreshBookmarkListKey}`}
 							selectedFolderId={selectedFolderId}
 							onAddBookmarkClick={isOwner && selectedFolderId ? handleOpenAddBookmarkModal : () => {}}
+							onEditBookmarkClick={isOwner && selectedFolderId ? handleOpenEditBookmarkModal : () => {}}
+							onDeleteBookmarkClick={isOwner && selectedFolderId ? handleDeleteBookmark : () => {}}
+							refreshKey={refreshBookmarkListKey}
 						/>
 					</div>
 				</main>
@@ -123,7 +170,7 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 				{isOwner && isAddFolderModalOpen && (
 					<AddFolder
 						isOpen={isAddFolderModalOpen}
-						title="Crear Nueva Colección"
+						title="Crear nueva colección"
 						onAccept={handleAcceptAddFolder}
 						onCancel={handleCloseAddFolderModal}
 					/>
@@ -136,7 +183,17 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 						folderId={selectedFolderId}
 						onAccept={handleAcceptAddBookmark}
 						onCancel={handleCloseAddBookmarkModal}
-						title={`Añadir Marcador a ${selectedFolderId}`}
+						title={`Añadir marcador a ${selectedFolderId}`}
+					/>
+				)}
+
+				{/*Modal para editar marcador*/}
+				{isOwner && isEditBookmarkModalOpen && bookmarkToEdit && (
+					<EditBookmark
+						isOpen={isEditBookmarkModalOpen}
+						bookmark={bookmarkToEdit}
+						onAccept={handleAcceptEditBookmark}
+						onCancel={handleCloseEditBookmarkModal}
 					/>
 				)}
 			</div>

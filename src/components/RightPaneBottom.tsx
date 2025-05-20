@@ -2,12 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { getBookmarksForFolder, type Bookmark } from "../lib/bookmarkService";
 
-interface RightPaneBottomContentProps {
+interface RightPaneBottomProps {
 	selectedFolderId: string | null;
 	onAddBookmarkClick: () => void;
+	onEditBookmarkClick: (bookmark: Bookmark) => void;
+	onDeleteBookmarkClick: (bookmark_id: string, bookmarkName: string) => void;
+	refreshKey?: number;
 }
 
-const RightPaneBottomContent: React.FC<RightPaneBottomContentProps> = ({ selectedFolderId, onAddBookmarkClick }) => {
+const RightPaneBottom: React.FC<RightPaneBottomProps> = ({
+	selectedFolderId,
+	onAddBookmarkClick,
+	onEditBookmarkClick,
+	onDeleteBookmarkClick,
+	refreshKey,
+}) => {
 	const { user, isLoaded: clerkIsLoaded } = useUser();
 	const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +47,20 @@ const RightPaneBottomContent: React.FC<RightPaneBottomContentProps> = ({ selecte
 		};
 
 		fetchBookmarks();
-	}, [selectedFolderId, user, clerkIsLoaded]);
+	}, [selectedFolderId, user, clerkIsLoaded, refreshKey]);
+
+	const handleEditBookmark = (bookmark: Bookmark) => {
+		console.log("EditBookmark clicked:", bookmark);
+		onEditBookmarkClick(bookmark);
+	};
+
+	const handleDeleteBookmark = (bookmark_id: string, bookmarkName: string) => {
+		// if (window.confirm(`¿Tienes la seguridad de que deseas eliminar el marcador "${bookmarkName}"?`)) {
+		// 	onDeleteBookmarkClick(bookmark_id, bookmarkName);
+		// }
+
+		onDeleteBookmarkClick(bookmark_id, bookmarkName);
+	};
 
 	const renderContent = () => {
 		if (!selectedFolderId && !isLoading) {
@@ -99,10 +121,16 @@ const RightPaneBottomContent: React.FC<RightPaneBottomContentProps> = ({ selecte
 									</a>
 								</td>
 								<td className="td-actions">
-									<button className="action-button edit-button" title="Editar marcador">
+									<button
+										className="action-button edit-button"
+										title="Editar marcador"
+										onClick={() => handleEditBookmark(bookmark)}>
 										EDITAR
 									</button>
-									<button className="action-button delete-button" title="Eliminar marcador">
+									<button
+										className="action-button delete-button"
+										title="Eliminar marcador"
+										onClick={() => handleDeleteBookmark(bookmark.bookmark_id, bookmark.title)}>
 										ELIMINAR
 									</button>
 								</td>
@@ -133,4 +161,4 @@ const RightPaneBottomContent: React.FC<RightPaneBottomContentProps> = ({ selecte
 	);
 };
 
-export default RightPaneBottomContent;
+export default RightPaneBottom;
