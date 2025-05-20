@@ -22,7 +22,6 @@
 	margin: 0.5rem 2rem;
 	padding: 0;
 	margin-top: 1.5rem;
-	border: fuchsia 1px solid;
 	border-radius: 16px;
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 }
@@ -84,7 +83,6 @@
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 	display: flex;
 	flex-direction: column;
-	border: 1px solid #07f122;
 }
 
 .right-pane-bottom {
