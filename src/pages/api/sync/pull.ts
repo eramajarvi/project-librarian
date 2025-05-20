@@ -68,27 +68,38 @@ export const GET: APIRoute = async (context: APIContext) => {
 	const lastSyncFolders = parseInt(url.searchParams.get("folders_last_sync") || "0");
 	const lastSyncBookmarks = parseInt(url.searchParams.get("bookmarks_last_sync") || "0");
 
-	// IMPORTANT: Capture this timestamp *before* making DB queries.
-	// This will be the timestamp the client uses for its *next* pull request.
 	const serverResponseTimestamp = Date.now();
+
+	console.log(
+		`PULL API: User ${userId}. Received lastSyncFolders: ${lastSyncFolders}, lastSyncBookmarks: ${lastSyncBookmarks}`
+	); // LOG 1
 
 	try {
 		console.log(
 			`Pull API: User ${userId} requesting changes since folders: ${lastSyncFolders}, bookmarks: ${lastSyncBookmarks}`
 		);
 
+		const folderSql =
+			"SELECT * FROM folders WHERE user_id = ? AND updated_at > ? AND (is_deleted = 0 OR is_deleted IS NULL)";
+		console.log(`PULL API: Folders SQL: ${folderSql} with args: [${userId}, ${lastSyncFolders}]`); // LOG 2
+
 		// Fetch active (not soft-deleted) folders modified since last sync
 		const activeFoldersRs = await turso.execute({
-			sql: "SELECT * FROM folders WHERE user_id = ? AND updated_at > ? AND (is_deleted = 0 OR is_deleted IS NULL)",
+			sql: folderSql,
 			args: [userId, lastSyncFolders],
 		});
 		const clientFolders = activeFoldersRs.rows.map(mapServerFolderToClient);
 
 		// Fetch active (not soft-deleted) bookmarks modified since last sync
+		const bookmarkSql =
+			"SELECT * FROM bookmarks WHERE user_id = ? AND updated_at > ? AND (is_deleted = 0 OR is_deleted IS NULL)";
+		console.log(`PULL API: Bookmarks SQL: ${bookmarkSql} with args: [${userId}, ${lastSyncBookmarks}]`); // LOG 4
 		const activeBookmarksRs = await turso.execute({
-			sql: "SELECT * FROM bookmarks WHERE user_id = ? AND updated_at > ? AND (is_deleted = 0 OR is_deleted IS NULL)",
+			sql: bookmarkSql,
 			args: [userId, lastSyncBookmarks],
 		});
+		console.log(`PULL API: Fetched ${activeBookmarksRs.rows.length} active bookmarks from Turso.`); // LOG 5
+
 		const clientBookmarks = activeBookmarksRs.rows.map(mapServerBookmarkToClient);
 
 		// Fetch IDs of folders that were soft-deleted on the server since last sync

@@ -70,15 +70,18 @@ function Curve({ selectedFolderId }: CurveProps) {
 		async function fetchBookmarksForFolder() {
 			if (!selectedFolderId || !user || !user.id || !clerkIsLoaded) {
 				setBookmarks([]);
-				setLoading(false); // Stop loading if no folder or user
+				setLoading(false);
+
 				if (clerkIsLoaded && selectedFolderId && !user) {
 					console.log("Curve: El usuario no está autenticado.");
 				}
+
 				return;
 			}
 
 			setLoading(true);
 			setError(null);
+
 			try {
 				console.log("Curve: Cargando marcadores para la carpeta:", selectedFolderId, "ID del usuario:", user.id);
 

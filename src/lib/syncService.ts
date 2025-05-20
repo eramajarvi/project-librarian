@@ -4,8 +4,8 @@ const API_BASE_URL = "/api/sync";
 
 // --- Last Sync Timestamp Management ---
 // We'll use localStorage for simplicity. A Dexie table 'sync_meta' could be more robust.
-const LAST_SYNC_FOLDERS_KEY = "last_sync_timestamp_folders";
-const LAST_SYNC_BOOKMARKS_KEY = "last_sync_timestamp_bookmarks";
+const getLastSyncFoldersKey = (userId: string) => `last_sync_timestamp_folders_${userId}`;
+const getLastSyncBookmarksKey = (userId: string) => `last_sync_timestamp_bookmarks_${userId}`;
 
 interface ApiChangeItemDataFolder {
 	// Fields expected by the server for a folder
@@ -82,13 +82,21 @@ type ApiChangeItem =
 
 // --- End Type definitions ---
 
-async function getLastSyncTimestamp(tableKey: string): Promise<number> {
-	const timestampStr = localStorage.getItem(tableKey);
+async function getLastSyncTimestamp(tableKeyGenerator: (userId: string) => string, userId: string): Promise<number> {
+	if (!userId) return 0; // No user, no specific timestamp
+	const userSpecificKey = tableKeyGenerator(userId);
+	const timestampStr = localStorage.getItem(userSpecificKey);
 	return timestampStr ? parseInt(timestampStr, 10) : 0;
 }
 
-async function setLastSyncTimestamp(tableKey: string, timestamp: number): Promise<void> {
-	localStorage.setItem(tableKey, timestamp.toString());
+async function setLastSyncTimestamp(
+	tableKeyGenerator: (userId: string) => string,
+	userId: string,
+	timestamp: number
+): Promise<void> {
+	if (!userId) return;
+	const userSpecificKey = tableKeyGenerator(userId);
+	localStorage.setItem(userSpecificKey, timestamp.toString());
 }
 
 // --- Push Local Changes to Server ---
@@ -356,12 +364,12 @@ async function pushChanges() {
 }
 
 // --- Pull Server Changes to Client ---
-async function pullChanges() {
+async function pullChanges(userId: string) {
 	console.log("SYNC_SERVICE: Starting pullChanges...");
 	let itemsPulled = 0;
 
-	const foldersLastSync = await getLastSyncTimestamp(LAST_SYNC_FOLDERS_KEY);
-	const bookmarksLastSync = await getLastSyncTimestamp(LAST_SYNC_BOOKMARKS_KEY);
+	const foldersLastSync = await getLastSyncTimestamp(getLastSyncFoldersKey, userId);
+	const bookmarksLastSync = await getLastSyncTimestamp(getLastSyncBookmarksKey, userId);
 
 	console.log(`SYNC_SERVICE: Pulling changes since folders: ${foldersLastSync}, bookmarks: ${bookmarksLastSync}`);
 
@@ -474,8 +482,8 @@ async function pullChanges() {
 			}
 		});
 
-		await setLastSyncTimestamp(LAST_SYNC_FOLDERS_KEY, data.server_current_timestamp);
-		await setLastSyncTimestamp(LAST_SYNC_BOOKMARKS_KEY, data.server_current_timestamp);
+		await setLastSyncTimestamp(getLastSyncFoldersKey, userId, data.server_current_timestamp);
+		await setLastSyncTimestamp(getLastSyncBookmarksKey, userId, data.server_current_timestamp);
 
 		console.log(`SYNC_SERVICE: Successfully processed ${itemsPulled} pulled items.`);
 	} catch (error) {
@@ -500,9 +508,11 @@ export async function synchronize() {
 	isSyncing = true;
 	console.log("SYNC_SERVICE: Starting synchronization...");
 
+	const userId = crypto.randomUUID();
+
 	try {
 		await pushChanges();
-		await pullChanges();
+		await pullChanges(userId);
 		console.log("SYNC_SERVICE: Synchronization finished successfully.");
 		window.dispatchEvent(new CustomEvent("datasync-complete", { detail: { success: true } }));
 	} catch (error) {
