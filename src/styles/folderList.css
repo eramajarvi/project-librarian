@@ -1,4 +1,4 @@
-.folder-list {
+.folder-list-scrollable-area {
 	list-style: none;
 	padding: 0;
 	margin: 0;
@@ -54,4 +54,49 @@
 	text-align: center;
 	color: #555;
 	font-style: italic;
+}
+
+.folder-list-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+.folder-list-content {
+	flex-grow: 1;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.folder-list-footer {
+	padding: 12px 10px; /* Padding around the button */
+	border-top: 1px solid #e0e4e8; /* Separator line */
+	background-color: #f8f9fa; /* Slight background for the footer */
+	flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+.add-folder-button {
+	width: 100%;
+	padding: 10px 15px;
+	font-size: 0.9em;
+	font-weight: 500;
+	background-color: #4a90e2; /* Example button color */
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.2s ease;
+}
+
+.add-folder-button:hover {
+	background-color: #357abd; /* Darker on hover */
+}
+
+.add-folder-button:focus {
+	outline: 2px solid #3b82f6;
+	outline-offset: 2px;
 }

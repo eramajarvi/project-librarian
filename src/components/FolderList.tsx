@@ -5,11 +5,12 @@ import { useUser } from "@clerk/clerk-react"; // For getting the current user
 import { getFoldersForUser, type Folder } from "../lib/folderService"; // Your service function and type
 
 interface FolderListProps {
-	onFolderSelect: (folderId: string) => void; // Callback to inform parent of selection
-	initiallySelectedFolderId?: string | null; // Optional: To set an initial selection
+	onFolderSelect: (folderId: string) => void;
+	initiallySelectedFolderId?: string | null;
+	onAddFolderClick: () => void;
 }
 
-const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelectedFolderId }) => {
+const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelectedFolderId, onAddFolderClick }) => {
 	const { user, isLoaded: clerkIsLoaded } = useUser();
 	const [folders, setFolders] = useState<Folder[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -17,7 +18,6 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 	const [selectedFolderId, setSelectedFolderId] = useState<string | null>(initiallySelectedFolderId || null);
 
 	useEffect(() => {
-		// Set initial selection if provided and different from current
 		if (initiallySelectedFolderId && initiallySelectedFolderId !== selectedFolderId) {
 			setSelectedFolderId(initiallySelectedFolderId);
 		}
@@ -25,7 +25,7 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 
 	useEffect(() => {
 		const fetchFolders = async () => {
-			if (!clerkIsLoaded) return; // Wait for Clerk to load
+			if (!clerkIsLoaded) return;
 
 			if (user && user.id) {
 				setIsLoading(true);
@@ -35,13 +35,12 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 					setFolders(userFolders);
 
 					if (!selectedFolderId && userFolders.length > 0) {
-						// Check if initiallySelectedFolderId is valid among fetched folders
 						const initialIsValid =
 							initiallySelectedFolderId && userFolders.some((f) => f.folder_id === initiallySelectedFolderId);
 						const firstFolderId = userFolders[0].folder_id;
 
 						if (initialIsValid && initiallySelectedFolderId) {
-							// setSelectedFolderId(initiallySelectedFolderId); // Already handled by above useEffect
+							// setSelectedFolderId(initiallySelectedFolderId);
 							onFolderSelect(initiallySelectedFolderId);
 						} else {
 							setSelectedFolderId(firstFolderId);
@@ -52,22 +51,20 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 						userFolders.length > 0 &&
 						!userFolders.some((f) => f.folder_id === selectedFolderId)
 					) {
-						// If current selection is invalid (e.g. folder deleted), select first
 						const firstFolderId = userFolders[0].folder_id;
 						setSelectedFolderId(firstFolderId);
 						onFolderSelect(firstFolderId);
 					} else if (userFolders.length === 0) {
-						setSelectedFolderId(null); // No folders, no selection
+						setSelectedFolderId(null);
 					}
 				} catch (err) {
-					console.error("Failed to fetch folders:", err);
-					setError(err instanceof Error ? err.message : "An unknown error occurred");
+					console.error("Error al obtener las carpetas:", err);
+					setError(err instanceof Error ? err.message : "Un error desconocido ocurrió.");
 					setFolders([]);
 				} finally {
 					setIsLoading(false);
 				}
 			} else if (clerkIsLoaded && !user) {
-				// User is not signed in
 				setFolders([]);
 				setIsLoading(false);
 				setSelectedFolderId(null);
@@ -75,45 +72,64 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 		};
 
 		fetchFolders();
-	}, [user, clerkIsLoaded, onFolderSelect, initiallySelectedFolderId]); // Removed selectedFolderId from deps to avoid loop with onFolderSelect
+	}, [user, clerkIsLoaded, onFolderSelect, initiallySelectedFolderId]);
 
 	const handleFolderClick = (folderId: string) => {
 		setSelectedFolderId(folderId);
-		onFolderSelect(folderId); // Notify parent component
+		onFolderSelect(folderId);
 	};
 
-	if (!clerkIsLoaded || isLoading) {
-		return <div className="folder-list-loading">Cargando colecciones...</div>;
-	}
+	const renderContent = () => {
+		if (!clerkIsLoaded || isLoading) {
+			return <div className="folder-list-loading">Cargando colecciones...</div>;
+		}
 
-	if (error) {
-		return <div className="folder-list-error">Error: {error}</div>;
-	}
+		if (error) {
+			return <div className="folder-list-error">Error: {error}</div>;
+		}
 
-	if (folders.length === 0) {
-		return <div className="folder-list-empty">No hay colecciones.</div>;
-		// You might want an "Add Folder" button here later
-	}
+		if (folders.length === 0) {
+			return <div className="folder-list-empty">No hay colecciones.</div>;
+			// You might want an "Add Folder" button here later
+		}
+
+		return (
+			<ul className="folder-list-scrollable-area">
+				{folders.map((folder) => (
+					<li
+						key={folder.folder_id}
+						className={`folder-list-item ${folder.folder_id === selectedFolderId ? "selected" : ""}`}
+						onClick={() => handleFolderClick(folder.folder_id)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") handleFolderClick(folder.folder_id);
+						}}
+						tabIndex={0}
+						role="button"
+						aria-pressed={folder.folder_id === selectedFolderId}
+						aria-label={folder.folder_name}>
+						<span className="folder-emoji">{folder.folder_emoji || "📂"}</span>
+						<span className="folder-name">{folder.folder_name}</span>
+					</li>
+				))}
+			</ul>
+		);
+	};
 
 	return (
-		<ul className="folder-list">
-			{folders.map((folder) => (
-				<li
-					key={folder.folder_id}
-					className={`folder-list-item ${folder.folder_id === selectedFolderId ? "selected" : ""}`}
-					onClick={() => handleFolderClick(folder.folder_id)}
-					onKeyDown={(e) => {
-						if (e.key === "Enter" || e.key === " ") handleFolderClick(folder.folder_id);
-					}}
-					tabIndex={0} // Make it focusable
-					role="button"
-					aria-pressed={folder.folder_id === selectedFolderId}
-					aria-label={folder.folder_name}>
-					<span className="folder-emoji">{folder.folder_emoji || "📂"}</span>
-					<span className="folder-name">{folder.folder_name}</span>
-				</li>
-			))}
-		</ul>
+		<div className="folder-list-container">
+			<div className="folder-list-content">{renderContent()}</div>
+
+			{clerkIsLoaded && user && (
+				<div className="folder-list-footer">
+					<button className="add-folder-button base-button" onClick={onAddFolderClick}>
+						<span role="img" aria-label="add folder icon" style={{ marginRight: "8px" }}>
+							➕
+						</span>
+						Añadir Colección
+					</button>
+				</div>
+			)}
+		</div>
 	);
 };
 
