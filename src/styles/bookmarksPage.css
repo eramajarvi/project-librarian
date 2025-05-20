@@ -29,8 +29,10 @@
 	/* border-radius: 16px; */
 	background: linear-gradient(to bottom, #020202, #2c2e3c);
 
-	border: 1px solid rgba(255, 255, 255, 0.4);
-	outline: 1px solid #020202;
+	border: 0.1em solid rgba(255, 255, 255, 0.2);
+	outline: 0.1em solid rgba(255, 255, 255, 0.2);
+	outline-offset: 1px;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .left-pane {
