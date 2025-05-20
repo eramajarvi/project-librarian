@@ -32,7 +32,6 @@
 	min-width: 200px;
 	max-width: 25%;
 	height: 100%;
-
 	box-sizing: border-box;
 	overflow-y: auto;
 	display: block;
@@ -78,32 +77,26 @@
 
 /*  */
 .right-pane-top {
-	/* max-width: 50%; */
 	min-height: 150px;
+	flex: 1.8;
 	padding: 20px;
-	/* max-width: 500px; */
-	/* box-sizing: border-box; */
-	overflow-x: scroll;
-	background-color: #ffffff;
+	overflow-x: auto;
+	background: linear-gradient(to bottom, #020202, #2c2e3c);
 	display: flex;
 	flex-direction: column;
+	border: 1px solid #07f122;
 }
 
 .right-pane-bottom {
 	/* --- Configuration for Right Pane Bottom --- */
-	flex: 1; /* Example: Takes up 1 part of available space */
-	/* Or use a fixed height or percentage */
-	/* Or flex-basis: 50%; */
-	/* ------------------------------------ */
-	/* max-width: 50%; */
+	flex: 1;
 	min-height: 150px;
-	padding: 20px;
+	padding: 0px;
 	box-sizing: border-box;
 	overflow-y: auto;
-	background-color: #f7f7f7; /* Slightly different background example */
-	border-top: 1px solid #e0e0e0; /* Separator line */
+	background-color: #000000; /* Slightly different background example */
 	display: flex; /* Optional: For content within this pane */
-	flex-direction: column; /* Optional */
+	flex-direction: column;
 }
 
 /* --- Responsive Considerations (Basic Example) --- */

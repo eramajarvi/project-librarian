@@ -110,10 +110,10 @@ const RightPaneBottomContent: React.FC<RightPaneBottomContentProps> = ({ selecte
 							</td>
 							<td className="td-actions">
 								<button className="action-button edit-button" title="Editar marcador">
-									✏️
+									EDITAR
 								</button>
 								<button className="action-button delete-button" title="Eliminar marcador">
-									🗑️
+									ELIMINAR
 								</button>
 							</td>
 						</tr>

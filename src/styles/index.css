@@ -10,6 +10,8 @@
 @import "./singleScreenshot.css" layer(components);
 @import "./bookmarksPage.css" layer(components);
 @import "./folderList.css" layer(components);
+@import "./rightPaneBottom.css" layer(components);
+@import "./rightPaneTop.css" layer(components);
 @import "./utilities.css" layer(utilities);
 
 @import "tw-animate-css";
