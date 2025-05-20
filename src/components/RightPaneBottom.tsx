@@ -118,18 +118,17 @@ const RightPaneBottomContent: React.FC<RightPaneBottomContentProps> = ({ selecte
 
 	return (
 		<div className="right-pane-bottom-container">
-			<div className="bookmarks-content-area">{renderContent()}</div>
+			<div className="bookmarks-content-area">
+				{renderContent()}
 
-			{clerkIsLoaded && user && selectedFolderId && (
-				<div className="bookmarks-footer">
-					<button className="add-bookmark-button base-button" onClick={onAddBookmarkClick}>
-						<span role="img" aria-label="add bookmark icon" style={{ marginRight: "8px" }}>
-							➕
-						</span>
-						Añadir Marcador
-					</button>
-				</div>
-			)}
+				{clerkIsLoaded && user && selectedFolderId && (
+					<div className="bookmarks-footer folder-list-footer">
+						<button className="add-bookmark-button add-folder-button edit-button" onClick={onAddBookmarkClick}>
+							+
+						</button>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };
