@@ -82,6 +82,7 @@ const EditFolder: React.FC<EditFolderProps> = ({ isOpen, title, folder, onAccept
 				...folder,
 				folder_name: trimmedName,
 				folder_emoji: emojiValue,
+				sync_status: "modified",
 			};
 			onAccept(updatedFolder);
 		}

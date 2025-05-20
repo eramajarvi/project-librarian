@@ -5,6 +5,7 @@ import "../styles/index.css";
 export interface UpdatedBookmarkData {
 	title: string;
 	url: string;
+	sync_status?: "modified";
 }
 
 interface EditBookmarkProps {
@@ -72,7 +73,7 @@ const EditBookmark: React.FC<EditBookmarkProps> = ({
 		}
 
 		if (isValid) {
-			onAccept(bookmark.bookmark_id, { url: trimmedUrl, title: trimmedName });
+			onAccept(bookmark.bookmark_id, { url: trimmedUrl, title: trimmedName, sync_status: "modified" });
 		}
 	};
 
