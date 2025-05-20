@@ -98,7 +98,7 @@ export async function deleteFolder(folderId: string): Promise<void> {
  */
 export async function getFoldersForUser(userId: string): Promise<Folder[]> {
 	if (!userId) return []; // Or throw error
-	return db.folders.where("folder_user_id").equals(userId).sortBy("created_at");
+	return db.folders.where("user_id").equals(userId).sortBy("created_at");
 }
 
 /**

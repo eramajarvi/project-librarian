@@ -1,24 +1,49 @@
+import React, { useState } from "react";
 import "../styles/index.css";
-import TestTurso from "./test-turso";
 
-const publishableKey = import.meta.env.PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-if (!publishableKey) {
-	throw new Error("Add your Clerk Publishable Key to the .env file");
-}
+import FolderList from "./FolderList";
 
 interface BookmarksViewProps {
 	username: string;
 	isOwner: boolean;
 }
 
-export default function BookmarksView({ username, isOwner }: any) {
+export default function BookmarksView({ username, isOwner }: BookmarksViewProps) {
+	const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+
+	const handleFolderSelection = (folderId: string) => {
+		console.log("Folder selected in BookmarksView:", folderId);
+		setSelectedFolderId(folderId);
+		// To do: Fetch and display bookmarks for the selected folder
+	};
+
 	return (
-		<div>
-			<h2>{isOwner ? "Your" : `${username}'s`} Bookmarks</h2>
-			<p>Bookmarks items will go here...</p>
-			<TestTurso />
-			{/* <SingleScreenshot targetUrl="https://www.google.com/" /> */}
+		<div className="page-layout-base">
+			<div className="two-pane-layout">
+				<aside className="left-pane">
+					<div className="left-pane-header">
+						<p>COLECCIONES</p>
+					</div>
+
+					<FolderList
+						onFolderSelect={handleFolderSelection}
+						initiallySelectedFolderId={selectedFolderId} // Pass current selection down
+						// You can also set a default initiallySelectedFolderId here if you want
+						// e.g., from localStorage or a hardcoded value on first load
+					/>
+				</aside>
+				<main className="right-pane">
+					{" "}
+					{/* Changed div to main for semantics */}
+					<h2>Detalles del Marcador</h2> {/* Added h2 for clarity */}
+					{selectedFolderId ? (
+						<p>Marcadores para la carpeta: {selectedFolderId}</p>
+					) : (
+						<p>Por favor, selecciona una colección de la izquierda.</p>
+					)}
+					{/* Bookmark details for the selectedFolderId will go here */}
+				</main>
+			</div>
 		</div>
 	);
 }
