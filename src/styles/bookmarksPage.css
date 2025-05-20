@@ -16,7 +16,8 @@
 .two-pane-layout {
 	display: flex;
 	position: relative;
-	width: 90%;
+	/* width: 90%; */
+	max-width: 90%;
 	height: 85%;
 	margin: 0.5rem 2rem;
 	padding: 0;
@@ -27,9 +28,9 @@
 }
 
 .left-pane {
-	width: 280px;
+	width: 25%;
 	min-width: 200px;
-	max-width: 400px;
+	max-width: 25%;
 	height: 100%;
 
 	box-sizing: border-box;
@@ -66,15 +67,43 @@
 }
 
 .right-pane {
-	flex-grow: 1; /* Takes up the remaining horizontal space */
-	background-color: #960e0e; /* Background for the right pane */
+	/* flex-grow: 1; */
+	/* width: 90%; */
+	max-width: 85%;
+	padding: 0px;
+	border-radius: 0 16px 16px 0;
+	display: flex;
+	flex-direction: column;
+}
+
+/*  */
+.right-pane-top {
+	/* max-width: 50%; */
+	min-height: 150px;
+	padding: 20px;
+	/* max-width: 500px; */
+	/* box-sizing: border-box; */
+	overflow-x: scroll;
+	background-color: #ffffff;
+	display: flex;
+	flex-direction: column;
+}
+
+.right-pane-bottom {
+	/* --- Configuration for Right Pane Bottom --- */
+	flex: 1; /* Example: Takes up 1 part of available space */
+	/* Or use a fixed height or percentage */
+	/* Or flex-basis: 50%; */
+	/* ------------------------------------ */
+	/* max-width: 50%; */
+	min-height: 150px;
 	padding: 20px;
 	box-sizing: border-box;
-	border-radius: 0 16px 16px 0;
-
-	/* height: 100vh; */
-	display: flex; /* Optional: if you want to use flexbox for content within right-pane */
-	flex-direction: column; /* Optional: if content stacks vertically */
+	overflow-y: auto;
+	background-color: #f7f7f7; /* Slightly different background example */
+	border-top: 1px solid #e0e0e0; /* Separator line */
+	display: flex; /* Optional: For content within this pane */
+	flex-direction: column; /* Optional */
 }
 
 /* --- Responsive Considerations (Basic Example) --- */
