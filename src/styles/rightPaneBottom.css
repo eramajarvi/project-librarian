@@ -24,7 +24,7 @@
 }
 
 /* --- Styles for Table Option --- */
-table a {
+.bookmark-table a {
 	text-decoration: none;
 	all: unset;
 	cursor: pointer;
@@ -68,7 +68,7 @@ table a {
 		font-weight: bolder;
 
 		.action-button {
-			display: block;
+			display: flex;
 		}
 	}
 }
@@ -92,18 +92,16 @@ table a {
 
 .th-url,
 .td-url {
-	width: 55%;
+	width: 50%;
 }
 
 .th-actions,
 .td-actions {
-	width: 100px;
-	text-align: center;
-	justify-content: center;
 	display: flex;
-	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	vertical-align: middle;
+	height: 1.5rem;
 }
 
 .td-name a,
@@ -120,22 +118,25 @@ table a {
 	text-decoration: underline;
 }
 
-.td-actions .action-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-
-	padding: 4px;
-	margin: 0 4px;
-	font-size: 1.1em;
-	opacity: 0.7;
-	transition: opacity 0.2s;
-}
-
 .action-button {
 	display: none;
 }
 
 .td-actions .action-button:hover {
 	opacity: 1;
+}
+
+.action-button {
+	font-size: 0.8em;
+	padding: 2px 8px;
+	max-width: fit-content;
+	color: #ffffff;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	user-select: none;
+	border-radius: 9999px;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+	transition: all 0.1s ease-in-out;
 }
