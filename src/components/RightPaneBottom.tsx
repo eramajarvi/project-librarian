@@ -74,7 +74,7 @@ const RightPaneBottom: React.FC<RightPaneBottomProps> = ({
 		if (isLoading) {
 			return (
 				<table className="bookmark-table is-loading">
-					<thead>...</thead>
+					{/* <thead>...</thead> */}
 					<tbody>
 						{Array.from({ length: 3 }).map((_, i) => (
 							<tr key={i}>
