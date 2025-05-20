@@ -81,10 +81,6 @@ const FolderList: React.FC<FolderListProps> = ({ onFolderSelect, initiallySelect
 	};
 
 	const renderContent = () => {
-		if (!clerkIsLoaded || isLoading) {
-			return <div className="folder-list-loading">Cargando colecciones...</div>;
-		}
-
 		if (error) {
 			return <div className="folder-list-error">Error: {error}</div>;
 		}
