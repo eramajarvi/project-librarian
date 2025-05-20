@@ -53,7 +53,38 @@ export async function updateFolder(
 	folderId: string,
 	updates: Partial<Pick<Folder, "folder_name" | "folder_emoji" | "updated_at">>
 ): Promise<Folder> {
-	if (!folderId) throw new Error("El ID de la carpeta es obligatorio para actualizar.");
+	//if (!folderId) throw new Error("El ID de la carpeta es obligatorio para actualizar.");
+
+	const existingFolder = await db.folders.get(folderId);
+	if (!existingFolder) {
+		console.error(`FolderService: Folder with id ${folderId} not found for update.`);
+		throw new Error("Folder not found");
+	}
+
+	const now = Date.now();
+	let newSyncStatus: Folder["sync_status"] = "modified";
+
+	// If the folder was 'new' and hasn't been synced yet, it should remain 'new'.
+	// If it was 'error', an update should probably try to re-sync it as 'modified'.
+	if (existingFolder.sync_status === "new") {
+		newSyncStatus = "new";
+	} else if (existingFolder.sync_status === "deleted_local") {
+		// This case should ideally not happen if UI prevents editing deleted items.
+		// If it does, it's a conflict or an un-delete operation.
+		console.warn(`FolderService: Updating a folder ${folderId} marked as 'deleted_local'. Setting to 'modified'.`);
+		newSyncStatus = "modified"; // Or handle as an "undelete" if you have that logic
+	}
+
+	const updatesWithSyncInfo: Partial<Folder> = {
+		...updates, // The actual field changes (folder_name, folder_emoji)
+		updated_at: now,
+		sync_status: newSyncStatus,
+		is_deleted: false, // Ensure it's not marked as deleted if being updated
+	};
+
+	await db.folders.update(folderId, updatesWithSyncInfo);
+	console.log(`FolderService: Folder ${folderId} updated locally. New sync_status: ${newSyncStatus}`);
+	// scheduleSync(); // Optional: trigger a debounced sync
 
 	try {
 		const numUpdated = await db.folders.update(folderId, updates);
@@ -78,13 +109,43 @@ export async function updateFolder(
  * @throws Error si la operación de la base de datos falla
  */
 export async function deleteFolder(folderId: string): Promise<void> {
-	if (!folderId) throw new Error("El ID de la carpeta es obligatorio para eliminar.");
-	try {
+	// if (!folderId) throw new Error("El ID de la carpeta es obligatorio para eliminar.");
+	// try {
+	// 	await db.folders.delete(folderId);
+	// 	console.log("Carpeta eliminada de Dexie:", folderId);
+	// } catch (error) {
+	// 	console.error("No se pudo eliminar la carpeta de Dexie:", error);
+	// 	throw new Error(`Failed to delete folder: ${error instanceof Error ? error.message : String(error)}`);
+	// }
+
+	const existingFolder = await db.folders.get(folderId);
+
+	if (!existingFolder) {
+		console.warn(`FolderService: Folder ${folderId} not found for deletion.`);
+		return; // Or throw new Error("Folder not found");
+	}
+
+	console.log(
+		`FolderService: Marking folder ${folderId} as deleted. Current status: ${existingFolder.sync_status}, server_id: ${existingFolder.server_id}`
+	);
+
+	if (existingFolder.sync_status === "new" && !existingFolder.server_id) {
+		// If it was 'new' and definitely never made it to the server (no server_id),
+		// we can just delete it locally. It won't be in any pushChanges batch.
+		console.log(`FolderService: Folder ${folderId} was 'new' and unsynced. Hard deleting locally.`);
 		await db.folders.delete(folderId);
-		console.log("Carpeta eliminada de Dexie:", folderId);
-	} catch (error) {
-		console.error("No se pudo eliminar la carpeta de Dexie:", error);
-		throw new Error(`Failed to delete folder: ${error instanceof Error ? error.message : String(error)}`);
+		// Also delete its associated bookmarks if they were also 'new'
+		await db.bookmarks.where({ folder_id: folderId, sync_status: "new" }).delete();
+	} else {
+		// If it was 'synced', 'modified', 'error', or even 'deleted_local' again (idempotency),
+		// or 'new' but somehow got a server_id (shouldn't happen with correct logic but safe to handle),
+		// mark it for server deletion.
+		console.log(`FolderService: Folder ${folderId} will be marked 'deleted_local' for server sync.`);
+		await db.folders.update(folderId, {
+			is_deleted: true, // For UI filtering
+			sync_status: "deleted_local",
+			updated_at: Date.now(),
+		});
 	}
 }
 
