@@ -1,4 +1,5 @@
 import { db, type Bookmark } from "./dexie";
+import { synchronize } from "./syncService";
 
 export interface NewBookmarkDetails {
 	url: string;
@@ -111,12 +112,39 @@ export async function updateBookmark(bookmark_id: string, updates: UpdateBookmar
  * @param bookmark_id El ID del marcador a eliminar.
  */
 export async function deleteBookmark(bookmark_id: string): Promise<void> {
-	if (!bookmark_id) throw new Error("El ID del marcador es obligatorio para eliminar.");
-	try {
+	// if (!bookmark_id) throw new Error("El ID del marcador es obligatorio para eliminar.");
+	// try {
+	// 	await db.bookmarks.delete(bookmark_id);
+	// 	console.log("Marcador eliminado correctamente:", bookmark_id);
+	// } catch (error) {
+	// 	console.error("Failed to delete bookmark:", error);
+	// 	throw new Error(`Failed to delete bookmark: ${error instanceof Error ? error.message : String(error)}`);
+	// }
+	const existingBookmark = await db.bookmarks.get(bookmark_id);
+
+	if (!existingBookmark) {
+		console.warn(`BookmarkService: Bookmark ${bookmark_id} not found for deletion.`);
+		return; // Or throw new Error("Bookmark not found");
+	}
+
+	console.log(
+		`BookmarkService: Marking bookmark ${bookmark_id} as deleted. Current status: ${existingBookmark.sync_status}`
+	);
+
+	// Bookmarks don't have a separate 'server_id' in your Dexie schema because bookmark_id is the PK on both client/server.
+	// So, if its status is 'new', it means it wasn't pushed.
+	if (existingBookmark.sync_status === "new") {
+		console.log(`BookmarkService: Bookmark ${bookmark_id} was 'new' and unsynced. Hard deleting locally.`);
 		await db.bookmarks.delete(bookmark_id);
-		console.log("Marcador eliminado correctamente:", bookmark_id);
-	} catch (error) {
-		console.error("Failed to delete bookmark:", error);
-		throw new Error(`Failed to delete bookmark: ${error instanceof Error ? error.message : String(error)}`);
+	} else {
+		// If it was 'synced', 'modified', 'error', or 'deleted_local' again
+		console.log(`BookmarkService: Bookmark ${bookmark_id} will be marked 'deleted_local' for server sync.`);
+		await db.bookmarks.update(bookmark_id, {
+			is_deleted: true,
+			sync_status: "deleted_local",
+			updated_at: Date.now(),
+		});
+
+		await synchronize();
 	}
 }

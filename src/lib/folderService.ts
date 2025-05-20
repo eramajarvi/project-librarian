@@ -1,4 +1,5 @@
 import { db, type Folder } from "./dexie";
+import { synchronize } from "./syncService";
 
 export interface NewFolderDetails {
 	folder_name: string;
@@ -109,20 +110,11 @@ export async function updateFolder(
  * @throws Error si la operación de la base de datos falla
  */
 export async function deleteFolder(folderId: string): Promise<void> {
-	// if (!folderId) throw new Error("El ID de la carpeta es obligatorio para eliminar.");
-	// try {
-	// 	await db.folders.delete(folderId);
-	// 	console.log("Carpeta eliminada de Dexie:", folderId);
-	// } catch (error) {
-	// 	console.error("No se pudo eliminar la carpeta de Dexie:", error);
-	// 	throw new Error(`Failed to delete folder: ${error instanceof Error ? error.message : String(error)}`);
-	// }
-
 	const existingFolder = await db.folders.get(folderId);
 
 	if (!existingFolder) {
 		console.warn(`FolderService: Folder ${folderId} not found for deletion.`);
-		return; // Or throw new Error("Folder not found");
+		return;
 	}
 
 	console.log(
@@ -146,6 +138,8 @@ export async function deleteFolder(folderId: string): Promise<void> {
 			sync_status: "deleted_local",
 			updated_at: Date.now(),
 		});
+
+		await synchronize();
 	}
 }
 
