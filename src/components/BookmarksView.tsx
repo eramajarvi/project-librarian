@@ -125,7 +125,7 @@ export default function BookmarksView({ username, isOwner }: BookmarksViewProps)
 	// --- Delete Bookmark Handler ---
 	const handleDeleteBookmark = async (bookmarkId: string, bookmarkName: string) => {
 		if (!user) return;
-		if (window.confirm(`¿Estás seguro de que quieres eliminar el marcador "${bookmarkName}"?`)) {
+		if (window.confirm(`¿Tienes la seguridad de que quieres eliminar el marcador "${bookmarkName}"?`)) {
 			try {
 				await serviceDeleteBookmark(bookmarkId);
 				setRefreshBookmarkListKey((prevKey) => prevKey + 1);
