@@ -48,15 +48,15 @@ function BookmarksFolders({ onFolderSelect, initiallySelectedFolderId }: Bookmar
 		console.log("BookmarksFolders: Folder changed to:", selectedValue);
 	};
 
-	if (loading) {
-		return (
-			<div className="bookmarks-dropdown-wrapper">
-				<select className="bookmarks-dropdown" value="" disabled>
-					<option value="">Cargando carpetas...</option>
-				</select>
-			</div>
-		);
-	}
+	// if (loading) {
+	// 	return (
+	// 		<div className="bookmarks-dropdown-wrapper">
+	// 			<select className="bookmarks-dropdown" value="" disabled>
+	// 				<option value="">Cargando carpetas...</option>
+	// 			</select>
+	// 		</div>
+	// 	);
+	// }
 
 	if (error) {
 		return (
