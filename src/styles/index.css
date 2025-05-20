@@ -7,6 +7,9 @@
 @import "./curved.css" layer(components);
 @import "./dropdown.css" layer(components);
 @import "./buttons.css" layer(components);
+@import "./singleScreenshot.css" layer(components);
+@import "./bookmarksPage.css" layer(components);
+@import "./folderList.css" layer(components);
 @import "./utilities.css" layer(utilities);
 
 @import "tw-animate-css";

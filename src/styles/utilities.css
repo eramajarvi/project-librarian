@@ -6,3 +6,17 @@
 	min-height: 100vh;
 	margin-top: 1rem;
 }
+
+.empty-state {
+	display: flex;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	background: linear-gradient(to bottom, #020202, #2c2e3c);
+}

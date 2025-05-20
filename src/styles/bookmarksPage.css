@@ -1,0 +1,106 @@
+/* styles/layout.css (or add to your global styles) */
+
+.page-layout-base {
+	display: flex;
+	position: absolute;
+	height: 100vh;
+	width: 100vw;
+	top: 0;
+	left: 0;
+	background-color: #070707;
+	justify-content: center;
+	align-items: center;
+	color: #020202;
+}
+
+.two-pane-layout {
+	display: flex;
+	position: relative;
+	width: 90%;
+	height: 85%;
+	margin: 0.5rem 2rem;
+	padding: 0;
+	margin-top: 1.5rem;
+	border: fuchsia 1px solid;
+	border-radius: 16px;
+	background: linear-gradient(to bottom, #020202, #2c2e3c);
+}
+
+.left-pane {
+	width: 280px;
+	min-width: 200px;
+	max-width: 400px;
+	height: 100%;
+
+	box-sizing: border-box;
+	overflow-y: auto;
+	display: block;
+	background-image: url("../assets/ReadingList-BGLinen.png");
+	background-position: top left;
+	background-size: repeat;
+	background-blend-mode: darken;
+	background-color: rgba(0, 0, 0, 0.2);
+	border-radius: 16px 0 0 16px;
+
+	justify-content: center;
+	align-items: top;
+
+	padding: 20px 0px;
+}
+
+.left-pane-header {
+	background-image: url("./assets/ReadingList-TopBar.png");
+	background-size: 100% 100%;
+	min-height: 3rem;
+
+	p {
+		font-size: 1em;
+		/* color: #f5f5f5; */
+		font-weight: bolder;
+		text-transform: uppercase;
+		text-align: center;
+		align-content: center;
+		justify-content: center;
+		line-height: 2.5rem;
+	}
+}
+
+.right-pane {
+	flex-grow: 1; /* Takes up the remaining horizontal space */
+	background-color: #960e0e; /* Background for the right pane */
+	padding: 20px;
+	box-sizing: border-box;
+	border-radius: 0 16px 16px 0;
+
+	/* height: 100vh; */
+	display: flex; /* Optional: if you want to use flexbox for content within right-pane */
+	flex-direction: column; /* Optional: if content stacks vertically */
+}
+
+/* --- Responsive Considerations (Basic Example) --- */
+@media (max-width: 768px) {
+	/* .two-pane-layout {
+    flex-direction: column; // Stack panes on smaller screens
+  }
+
+  .left-pane {
+    width: 100%; // Full width when stacked
+    height: auto; // Adjust height as needed, or a fixed portion
+    max-height: 40vh; // Example: limit height
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .right-pane {
+    height: auto; // Adjust height or remaining portion
+    flex-grow: 1; // Ensure it takes remaining space if left-pane has fixed height
+  } */
+
+	/* Alternative for small screens: Hide left-pane by default, show with a toggle button */
+	.left-pane {
+		/* display: none; // Or position it off-screen and slide it in */
+		/* For now, let's just make it narrower */
+		width: 200px;
+		min-width: 160px;
+	}
+}

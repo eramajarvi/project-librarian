@@ -197,3 +197,14 @@
 .folder-name-input {
 	line-height: 1.5rem;
 }
+
+.label-block {
+	display: block;
+	margin-bottom: 0.3em;
+	font-weight: 500;
+}
+
+.bookmark-url-input {
+	width: 90%;
+	margin: 0.5rem 0.5rem;
+}

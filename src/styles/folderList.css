@@ -1,0 +1,57 @@
+.folder-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.folder-list-item {
+	display: flex;
+	align-items: center;
+	padding: 2px 12px;
+	cursor: pointer;
+	border-radius: 0px;
+	margin-bottom: 4px; /* Spacing between items */
+	transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+	border: 1px solid transparent; /* For consistent sizing with selected state */
+}
+
+.folder-list-item:hover {
+	background: linear-gradient(to top, #53a3ff, #83bffa);
+	/* color: white; */
+}
+
+.folder-list-item:focus {
+	outline: 2px solid #3b82f6; /* Focus ring for accessibility */
+	outline-offset: 1px;
+}
+
+.folder-list-item.selected {
+	background: linear-gradient(to top, #2c8dfb, #83bffa);
+	color: #ffffff; /* Darker text color for selected item */
+	font-weight: 500;
+	border-color: #1a76df;
+}
+
+.folder-emoji {
+	margin-right: 10px;
+	font-size: 1.1em; /* Make emoji slightly larger */
+	display: inline-block;
+	width: 20px; /* Ensure consistent spacing for emoji */
+	text-align: center;
+}
+
+.folder-name {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex-grow: 1; /* Allow name to take available space */
+}
+
+.folder-list-loading,
+.folder-list-error,
+.folder-list-empty {
+	padding: 15px;
+	text-align: center;
+	color: #555;
+	font-style: italic;
+}
