@@ -60,8 +60,29 @@
 	}
 
 	::-webkit-scrollbar-thumb {
-		background: linear-gradient(to right, #6af 10%, #fff4 20%, #6af 30%, #9ef),
-			linear-gradient(to bottom, #6af 5px, #6af0 10px), linear-gradient(to top, #6af 5px, #6af0 10px);
+		background-image: linear-gradient(
+				to bottom,
+				rgba(26, 130, 251, 0) 0%,
+				rgba(26, 130, 251, 0.1) 20%,
+				rgba(26, 130, 251, 0.7) 60%,
+				#1a82fb 85%,
+				#1a82fb 100%
+			),
+			linear-gradient(
+				140deg,
+				#1a82fb 25%,
+				#6fb4f7 25%,
+				#6fb4f7 50%,
+				#1a82fb 50%,
+				#1a82fb 75%,
+				#6fb4f7 75%,
+				#6fb4f7 100%
+			);
+
+		background-size: 100% 100%, 40px 33.56px;
+
+		background-repeat: no-repeat, repeat;
+
 		border: 1px solid #ccc;
 		box-sizing: border-box;
 		box-shadow: inset 0 0 4px #004;
