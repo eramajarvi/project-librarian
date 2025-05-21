@@ -68,6 +68,8 @@
 		align-content: center;
 		justify-content: center;
 		line-height: 2.5rem;
+		color: #535353;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 	}
 }
 

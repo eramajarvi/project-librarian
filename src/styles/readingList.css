@@ -1,0 +1,48 @@
+.reading-list-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/* min-height: 100vh; */
+	margin-top: 1rem;
+	margin: auto;
+	height: 70%;
+	width: 50%;
+	background-image: url("../assets/ReadingList-BGLinen.png");
+	background-position: top left;
+	background-size: repeat;
+	background-blend-mode: darken;
+	background-color: rgba(0, 0, 0, 0.2);
+	overflow: hidden;
+
+	border: 0.2em solid rgba(255, 255, 255, 0.2);
+	outline: 0.2em solid rgba(255, 255, 255, 0.2);
+	outline-offset: 1px;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.glasses-dark {
+	background-image: url("../assets/ReadingList-GlassesDark.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 180px;
+	height: 90px;
+}
+
+.reading-list-title {
+	font-size: 2em;
+	color: black;
+	font-size: 28px;
+}
+
+.reading-disclaimer {
+	align-content: center;
+	text-align: center;
+}
+
+.pressed-heading {
+	color: #535353;
+	font-weight: bold;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+	line-height: 1.2;
+}

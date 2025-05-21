@@ -5,6 +5,12 @@
 	align-items: start;
 	min-height: 100vh;
 	margin-top: 1rem;
+	margin: auto;
+	/* height: 100%; */
+	max-height: 80%;
+	width: 100%;
+	/* background-color: rgb(60, 0, 255); */
+	/* overflow: hidden; */
 }
 
 .empty-state {
