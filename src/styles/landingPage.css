@@ -100,6 +100,11 @@
 	transform: translateY(-35px) rotate(-2deg);
 }
 
+.edit-button > a {
+	color: white;
+	text-decoration: none;
+}
+
 .emoji1 {
 	margin-left: -25rem;
 	margin-top: -25rem;
